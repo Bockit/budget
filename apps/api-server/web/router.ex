@@ -9,6 +9,6 @@ defmodule BudgetApi.Router do
   scope "/api" do
     pipe_through :api
 
-    forward "/", GraphQL.Plug.Endpoint, schema: {BudgetApi.GraphQL.Schema.Root, :schema}
+    forward "/", GraphQL.Plug.Endpoint, schema: {BudgetApi.GraphQL.RootSchema, :schema}
   end
 end

@@ -7,14 +7,28 @@ defmodule BudgetApi.GraphQL.RootSchema do
   alias BudgetApi.GraphQL.Recurring
   alias BudgetApi.GraphQL.Transaction
 
-  @list_args %{
-    offset: %{type: "Int"},
-    limit: %{type: "Int"}
-  }
+  defp list(name, schema, resolve) do
+    %{
+      type: %List{of_type: schema},
+      name: name,
+      args: %{
+        offset: %{type: "Int"},
+        limit: %{type: "Int"}
+      },
+      resolve: resolve
+    }
+  end
 
-  @id_args %{
-    id: %{type: "ID"}
-  }
+  defp id(name, schema, resolve) do
+    %{
+      type: schema,
+      name: name,
+      args: %{
+        id: %{type: "ID"}
+      },
+      resolve: resolve
+    }
+  end
 
   def schema do
     %Schema{
@@ -22,38 +36,14 @@ defmodule BudgetApi.GraphQL.RootSchema do
         name: "RootQueryType",
         description: "The root query",
         fields: %{
-          tag: %{
-            type: Tag.schema,
-            args: @id_args,
-            resolve: &Tag.resolve/3
-          },
-          tags: %{
-            type: %List{of_type: Tag.schema},
-            args: @list_args,
-            resolve: &Tag.resolve_list/3
-          },
+          tag: id("Tag", Tag.schema, &Tag.resolve/3),
+          tags: list("Tags", Tag.schema, &Tag.resolve_list/3),
 
-          recurring: %{
-            type: Recurring.schema,
-            args: @id_args,
-            resolve: &Recurring.resolve/3
-          },
-          recurrings: %{
-            type: %List{of_type: Recurring.schema},
-            args: @list_args,
-            resolve: &Recurring.resolve_list/3
-          },
+          recurring: id("Recurring", Recurring.schema, &Recurring.resolve/3),
+          recurrings: list("Recurrings", Recurring.schema, &Recurring.resolve_list/3),
 
-          transaction: %{
-            type: %List{of_type: Transaction.schema},
-            args: @id_args,
-            resolve: &Transaction.resolve/3
-          },
-          transactions: %{
-            type: %List{of_type: Transaction.schema},
-            args: @list_args,
-            resolve: &Transaction.resolve_list/3
-          }
+          transaction: id("Transaction", Transaction.schema, &Transaction.resolve/3),
+          transactions: list("Transactions", Transaction.schema, &Transaction.resolve_list/3)
         }
       }
     }

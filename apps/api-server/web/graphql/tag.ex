@@ -1,4 +1,5 @@
 defmodule BudgetApi.GraphQL.Tag do
+  import Ecto.Query
   alias GraphQL.ObjectType
 
   def schema do
@@ -12,19 +13,23 @@ defmodule BudgetApi.GraphQL.Tag do
     }
   end
 
-  def resolve(_, %{id: id}, _), do: make_tag(id)
+  def resolve(_, %{id: id}, _) do
+    BudgetApi.Repo.get!(BudgetApi.Tag, id)
+    |> serialise
+  end
 
   def resolve_list(_, %{offset: offset, limit: limit}, _) do
-    for id <- offset..offset + limit - 1, do: make_tag("#{id}")
+    query = from t in BudgetApi.Tag,
+      offset: ^offset,
+      limit: ^limit
+
+    query |> BudgetApi.Repo.all |> Enum.map(&serialise/1)
   end
   def resolve_list(_, %{offset: offset}, _), do: resolve_list(%{}, %{offset: offset, limit: 10}, %{})
   def resolve_list(_, %{limit: limit}, _), do: resolve_list(%{}, %{offset: 0, limit: limit}, %{})
   def resolve_list(_, _, _), do: resolve_list(%{}, %{offset: 0, limit: 10}, %{})
 
-  defp make_tag(id) do
-    %{
-      id: id,
-      tag: "Lorem ipsum"
-    }
+  defp serialise(model) do
+    Map.take(model, [:id, :tag])
   end
 end

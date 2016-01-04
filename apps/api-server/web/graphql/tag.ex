@@ -14,7 +14,8 @@ defmodule BudgetApi.GraphQL.Tag do
   end
 
   def resolve(_, %{id: id}, _) do
-    BudgetApi.Repo.get!(BudgetApi.Tag, id)
+    BudgetApi.Tag
+    |> BudgetApi.Repo.get!(id)
     |> serialise
   end
 
@@ -23,7 +24,9 @@ defmodule BudgetApi.GraphQL.Tag do
       offset: ^offset,
       limit: ^limit
 
-    query |> BudgetApi.Repo.all |> Enum.map(&serialise/1)
+    query
+    |> BudgetApi.Repo.all
+    |> Enum.map(&serialise/1)
   end
   def resolve_list(_, %{offset: offset}, _), do: resolve_list(%{}, %{offset: offset, limit: 10}, %{})
   def resolve_list(_, %{limit: limit}, _), do: resolve_list(%{}, %{offset: 0, limit: limit}, %{})

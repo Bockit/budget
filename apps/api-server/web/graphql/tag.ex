@@ -28,9 +28,15 @@ defmodule BudgetApi.GraphQL.Tag do
     |> BudgetApi.Repo.all
     |> Enum.map(&serialise/1)
   end
-  def resolve_list(_, %{offset: offset}, _), do: resolve_list(%{}, %{offset: offset, limit: 10}, %{})
-  def resolve_list(_, %{limit: limit}, _), do: resolve_list(%{}, %{offset: 0, limit: limit}, %{})
-  def resolve_list(_, _, _), do: resolve_list(%{}, %{offset: 0, limit: 10}, %{})
+  def resolve_list(_, %{offset: offset}, _) do
+    resolve_list(%{}, %{offset: offset, limit: 10}, %{})
+  end
+  def resolve_list(_, %{limit: limit}, _) do
+    resolve_list(%{}, %{offset: 0, limit: limit}, %{})
+  end
+  def resolve_list(_, _, _) do
+    resolve_list(%{}, %{offset: 0, limit: 10}, %{})
+  end
 
   defp serialise(model) do
     Map.take(model, [:id, :tag])

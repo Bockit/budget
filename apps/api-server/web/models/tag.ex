@@ -4,8 +4,11 @@ defmodule BudgetApi.Tag do
   schema "tags" do
     field :tag, :string
 
-    has_many :recurring, BudgetApi.Recurring
-    has_many :transaction, BudgetApi.Transaction
+    has_many :recurring_tags, BudgetApi.RecurringTag
+    has_many :recurrings, through: [:recurring_tags, :recurring]
+
+    has_many :transaction_tags, BudgetApi.TransactionTag
+    has_many :transactions, through: [:transaction_tags, :transaction]
 
     timestamps
   end

@@ -6,7 +6,8 @@ defmodule BudgetApi.Recurring do
     field :amount, :float, default: 0.0
     field :description, :string
 
-    has_many :tags, BudgetApi.Tag
+    has_many :recurring_tags, BudgetApi.RecurringTag
+    has_many :tags, through: [:recurring_tags, :tag]
 
     timestamps
   end

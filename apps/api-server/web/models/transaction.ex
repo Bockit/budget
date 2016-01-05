@@ -7,8 +7,8 @@ defmodule BudgetApi.Transaction do
     field :description, :string
     field :audited, :boolean, default: false
 
-    has_many :tags, BudgetApi.Tag
-    has_many :transactions_tags, through: [:tags, :tag]
+    has_many :transaction_tags, BudgetApi.TransactionTag
+    has_many :tags, through: [:transaction_tags, :tag]
 
     timestamps
   end

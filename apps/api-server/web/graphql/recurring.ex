@@ -13,44 +13,50 @@ defmodule BudgetApi.GraphQL.Recurring do
         frequency: %{ type: "String" },
         amount: %{ type: "Float" },
         description: %{ type: "String" },
-        tags: %{ type: %List{ of_type: Tag.schema } }
+        tags: %{
+          type: %List{ of_type: Tag.schema },
+          resolve: &resolve_tags/3
+        }
       }
     }
   end
 
   def resolve(_, %{id: id}, _) do
-    query = from r in BudgetApi.Recurring,
-      where: r.id == ^id,
-      preload: :tags
-
-    [recurring] = BudgetApi.Repo.all(query)
-    serialise(recurring)
+    BudgetApi.Repo.get!(BudgetApi.Recurring, id)
+    |> serialise_recurring
   end
 
   def resolve_list(_, %{offset: offset, limit: limit}, _) do
     query = from t in BudgetApi.Recurring,
       offset: ^offset,
-      limit: ^limit,
-      preload: :tags
+      limit: ^limit
 
     query
     |> BudgetApi.Repo.all
-    |> Enum.map(&serialise/1)
+    |> Enum.map(&serialise_recurring/1)
   end
-  def resolve_list(_, %{offset: offset}, _), do: resolve_list(%{}, %{offset: offset, limit: 10}, %{})
-  def resolve_list(_, %{limit: limit}, _), do: resolve_list(%{}, %{offset: 0, limit: limit}, %{})
-  def resolve_list(_, _, _), do: resolve_list(%{}, %{offset: 0, limit: 10}, %{})
-
-  defp serialise(model) do
-    serialised = model
-    |> Map.take([:id, :frequency, :amount, :description, :tags])
-    |> Map.update!(:tags, &serialise_tags/1)
-
-    serialised
+  def resolve_list(_, %{offset: offset}, _) do
+    resolve_list(%{}, %{offset: offset, limit: 10}, %{})
+  end
+  def resolve_list(_, %{limit: limit}, _) do
+    resolve_list(%{}, %{offset: 0, limit: limit}, %{})
+  end
+  def resolve_list(_, _, _) do
+    resolve_list(%{}, %{offset: 0, limit: 10}, %{})
   end
 
-  defp serialise_tags(tags) do
-    Enum.map(tags, &serialise_tag/1)
+  defp serialise_recurring(model) do
+    Map.take(model, [:id, :frequency, :amount, :description])
+  end
+
+  defp resolve_tags(recurring, _, _) do
+    query = from t in BudgetApi.Tag,
+      inner_join: rt in assoc(t, :recurring_tags),
+      where: rt.recurring_id == ^recurring.id
+
+    query
+    |> BudgetApi.Repo.all
+    |> Enum.map(&serialise_tag/1)
   end
 
   defp serialise_tag(model) do

@@ -15,7 +15,7 @@ defmodule BudgetApi.GraphQL.Transaction do
         description: %{ type: "String" },
         audited: %{ type: "Boolean" },
         tags: %{
-          type: %List{of_type: Tag},
+          type: %List{ of_type: Tag.schema },
           resolve: &resolve_tags/3
         }
       }
@@ -46,21 +46,17 @@ defmodule BudgetApi.GraphQL.Transaction do
     resolve_list(%{}, %{offset: 0, limit: 10}, %{})
   end
 
-  defp serialise(model) do
+  def serialise(model) do
     Map.take(model, [:id, :timestamp, :amount, :description, :audited])
   end
 
-  defp resolve_tags(recurring, _, _) do
+  defp resolve_tags(%{id: id}, _, _) do
     query = from t in BudgetApi.Tag,
       inner_join: rt in assoc(t, :recurring_tags),
-      where: rt.recurring_id == ^recurring.id
+      where: rt.recurring_id == ^id
 
     query
     |> BudgetApi.Repo.all
-    |> Enum.map(&serialise_tag/1)
-  end
-
-  defp serialise_tag(model) do
-    Map.take(model, [:id, :tag])
+    |> Enum.map(&Tag.serialise/1)
   end
 end

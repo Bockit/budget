@@ -24,7 +24,7 @@ defmodule BudgetApi.GraphQL.Tag do
     }
   end
 
-  def resolve(_, %{id: id}, _) do
+  def resolve_single(_, %{id: id}, _) do
     BudgetApi.Tag
     |> BudgetApi.Repo.get!(id)
     |> serialise

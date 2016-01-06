@@ -36,13 +36,13 @@ defmodule BudgetApi.GraphQL.RootSchema do
         name: "RootQueryType",
         description: "The root query",
         fields: %{
-          tag: id("Tag", Tag.schema, &Tag.resolve/3),
+          tag: id("Tag", Tag.schema, &Tag.resolve_single/3),
           tags: list("Tags", Tag.schema, &Tag.resolve_list/3),
 
-          recurring: id("Recurring", Recurring.schema, &Recurring.resolve/3),
+          recurring: id("Recurring", Recurring.schema, &Recurring.resolve_single/3),
           recurrings: list("Recurrings", Recurring.schema, &Recurring.resolve_list/3),
 
-          transaction: id("Transaction", Transaction.schema, &Transaction.resolve/3),
+          transaction: id("Transaction", Transaction.schema, &Transaction.resolve_single/3),
           transactions: list("Transactions", Transaction.schema, &Transaction.resolve_list/3)
         }
       }

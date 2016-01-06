@@ -21,7 +21,7 @@ defmodule BudgetApi.GraphQL.Recurring do
     }
   end
 
-  def resolve(_, %{id: id}, _) do
+  def resolve_single(_, %{id: id}, _) do
     BudgetApi.Repo.get!(BudgetApi.Recurring, id)
     |> serialise
   end

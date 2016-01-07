@@ -1,0 +1,67 @@
+{
+  "name": "@bockit/jameshiscock.com-webapp",
+  "version": "1.0.0",
+  "description": "Personal website.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/bockit/jameshiscock.com.git"
+  },
+  "scripts": {
+    "start": "gulp",
+    "discify": "discify build/production/app.js > build/production/disc.html && open build/production/disc.html"
+  },
+  "keywords": [
+    "app",
+    "james",
+    "hiscock",
+    "isomorphic",
+    "blog"
+  ],
+  "author": "James Hiscock <james@jameshiscock.com> (http://jameshiscock.com/)",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/bockit/jameshiscock.com/issues"
+  },
+  "homepage": "https://jameshiscock.com",
+  "dependencies": {
+    "@bockit/simple-router": "^1.0.3",
+    "immutable": "^3.7.5",
+    "popstate": "^1.0.0",
+    "react": "^0.14.0",
+    "react-dom": "^0.14.0",
+    "react-redux": "^4.0.0",
+    "redux": "^3.0.4",
+    "redux-devtools": "^2.1.5",
+    "redux-thunk": "^1.0.0",
+    "request": "^2.65.0",
+    "reselect": "^2.0.0",
+    "xhr": "^2.1.0"
+  },
+  "browser": {
+    "request": "xhr"
+  },
+  "devDependencies": {
+    "@bockit/bundle": "^2.0.1",
+    "@smallmultiples/gulp-error-logger": "^1.0.0",
+    "@smallmultiples/livereload": "^1.0.0",
+    "@smallmultiples/ncalls": "^1.0.0",
+    "@smallmultiples/serve": "^1.0.1",
+    "@smallmultiples/static": "^1.0.2",
+    "@smallmultiples/string-builder": "^1.0.0",
+    "babel-core": "^5.8.25",
+    "babel-eslint": "^4.1.4",
+    "config": "^1.16.0",
+    "css-modulesify": "^0.10.0",
+    "eslint-config-bockit": "^3.0.0",
+    "eslint-plugin-react": "^3.8.0",
+    "envify": "^3.4.0",
+    "gulp": "^3.9.0",
+    "gulp-eslint": "^1.0.0",
+    "gulp-util": "^3.0.6",
+    "rimraf": "^2.4.3"
+  }
+}

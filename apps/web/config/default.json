@@ -1,0 +1,13 @@
+{
+    "notifications": {
+        "build": true,
+        "error": true
+    },
+
+    "server": {
+        "port": 8080,
+        "livereload": 35729
+    },
+
+    "env": "development"
+}

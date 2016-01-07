@@ -1,24 +1,34 @@
 defmodule BudgetApi.GraphQL.Recurring do
   import Ecto.Query
+
+  alias __MODULE__, as: Recurring
   alias GraphQL.ObjectType
   alias GraphQL.List
   alias BudgetApi.GraphQL.Tag
 
-  def schema do
+  def base_schema do
     %ObjectType{
       name: "Recurring",
       description: "A recurring payment made or received.",
       fields: %{
-        id: %{ type: "ID" },
-        frequency: %{ type: "String" },
-        amount: %{ type: "Float" },
-        description: %{ type: "String" },
-        tags: %{
-          type: %List{ of_type: Tag.schema },
-          resolve: &resolve_tags/3
-        }
-      }
+        id: %{type: "ID"},
+        frequency: %{type: "String"},
+        amount: %{type: "Float"},
+        description: %{type: "String"},
+      },
     }
+  end
+
+  def schema(0) do
+    base_schema
+  end
+  def schema(depth) do
+    Map.put(base_schema, :fields, Map.merge(base_schema.fields, %{
+      tags: %{
+        type: %List{of_type: Tag.schema(depth - 1)},
+        resolve: &Recurring.resolve_tags/3,
+      },
+    }))
   end
 
   def resolve_single(_, %{id: id}, _) do

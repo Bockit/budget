@@ -30,20 +30,25 @@ defmodule BudgetApi.GraphQL.RootSchema do
     }
   end
 
+  @schema_depth 5
   def schema do
+    tag = Tag.schema(@schema_depth)
+    recurring = Recurring.schema(@schema_depth)
+    transaction = Transaction.schema(@schema_depth)
+
     %Schema{
       query: %ObjectType{
         name: "RootQueryType",
         description: "The root query",
         fields: %{
-          tag: id("Tag", Tag.schema, &Tag.resolve_single/3),
-          tags: list("Tags", Tag.schema, &Tag.resolve_list/3),
+          tag: id("Tag", tag, &Tag.resolve_single/3),
+          tags: list("Tags", tag, &Tag.resolve_list/3),
 
-          recurring: id("Recurring", Recurring.schema, &Recurring.resolve_single/3),
-          recurrings: list("Recurrings", Recurring.schema, &Recurring.resolve_list/3),
+          recurring: id("Recurring", recurring, &Recurring.resolve_single/3),
+          recurrings: list("Recurrings", recurring, &Recurring.resolve_list/3),
 
-          transaction: id("Transaction", Transaction.schema, &Transaction.resolve_single/3),
-          transactions: list("Transactions", Transaction.schema, &Transaction.resolve_list/3)
+          transaction: id("Transaction", transaction, &Transaction.resolve_single/3),
+          transactions: list("Transactions", transaction, &Transaction.resolve_list/3)
         }
       }
     }

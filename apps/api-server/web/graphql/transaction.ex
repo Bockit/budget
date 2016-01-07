@@ -1,25 +1,35 @@
 defmodule BudgetApi.GraphQL.Transaction do
   import Ecto.Query
+
+  alias __MODULE__, as: Transaction
   alias GraphQL.ObjectType
   alias GraphQL.List
   alias BudgetApi.GraphQL.Tag
 
-  def schema do
+  def base_schema do
     %ObjectType{
       name: "Transaction",
       description: "A payment made or received.",
       fields: %{
-        id: %{ type: "ID" },
-        timestamp: %{ type: "String" },
-        amount: %{ type: "Float" },
-        description: %{ type: "String" },
-        audited: %{ type: "Boolean" },
-        tags: %{
-          type: %List{ of_type: Tag.schema },
-          resolve: &resolve_tags/3
-        }
-      }
+        id: %{type: "ID"},
+        timestamp: %{type: "String"},
+        amount: %{type: "Float"},
+        description: %{type: "String"},
+        audited: %{type: "Boolean"},
+      },
     }
+  end
+
+  def schema(0) do
+    base_schema
+  end
+  def schema(depth) do
+    Map.put(base_schema, :fields, Map.merge(base_schema.fields, %{
+      tags: %{
+        type: %List{of_type: Tag.schema(depth - 1)},
+        resolve: &Transaction.resolve_tags/3
+      }
+    }))
   end
 
   def resolve_single(_, %{id: id}, _) do

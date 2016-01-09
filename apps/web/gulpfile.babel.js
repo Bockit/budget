@@ -15,6 +15,9 @@ import rimraf from 'rimraf'
 import config from 'config'
 import cssModulesify from 'css-modulesify'
 import eslint from 'gulp-eslint'
+import Core from 'css-modules-loader-core'
+import nested from 'postcss-nested'
+import autoprefixer from 'autoprefixer'
 
 let isProduction = env === 'staging' || env === 'production'
 let error = errorFactory({ notifications: config.get('notifications.error') })
@@ -29,21 +32,36 @@ let copyStatic = staticFactory({ error })
 let serve = serveFactory({ error })
 let startLr = livereloadFactory({ error })
 
+var postCss = [
+	nested,
+	Core.values,
+	Core.localByDefault,
+	Core.extractImports,
+	Core.scope,
+]
+
 let transforms = [ 'babelify' ]
 if (isProduction) transforms.push('envify')
 let bundleSettings = {
-    error
-  , transforms
-  , onUpdate: reloadAll
-  , buildNotifications: config.get('notifications.build')
-  , browserifyOptions: {
-        standalone: 'App'
-    }
-  , plugins: [ {
-        plugin: cssModulesify
-      , opts: { rootDir: __dirname, output: dest(env) + '/index.css' }
-    } ]
-  , eslint: true
+	error,
+	transforms,
+	onUpdate: reloadAll,
+	buildNotifications: config.get('notifications.build'),
+	browserifyOptions: {
+		standalone: 'App',
+	},
+	plugins: [ {
+		plugin: cssModulesify,
+		opts: {
+			rootDir: __dirname,
+			output: dest(env) + '/index.css',
+			use: postCss,
+			after: [ autoprefixer({
+				browsers: [ 'last 2 versions', 'IE >= 9' ],
+				remove: false,
+			}) ],
+		},
+	} ],
 }
 if (isProduction) bundleSettings.ignores = [ 'redux-devtools' ]
 let bundle = bundleFactory(bundleSettings)
@@ -53,38 +71,38 @@ gulp.task('clean', (next) => rimraf(dest(env), next))
 
 // Build and exit
 gulp.task('build', [ 'lint', 'clean' ], (next) => {
-    next = ncalls(3, next)
-    bundle('index.js', dest(env), {
-        debug: !isProduction
-      , minify: isProduction
-      , once: true
-    }, next)
-    copyStatic('static/**/*', dest(env), { base: './static' }, next)
+	next = ncalls(3, next)
+	bundle('index.js', dest(env), {
+		debug: !isProduction,
+		minify: isProduction,
+		once: true,
+	}, next)
+	copyStatic('static/**/*', dest(env), { base: './static' }, next)
 })
 
 // Build and start watching for changes
 gulp.task('default', [ 'lint', 'clean' ], () => {
-    bundle('index.js', dest(env), {
-        debug: !isProduction
-      , minify: isProduction
-    })
-    copyStatic('static/**/*', dest(env), { base: './static' })
+	bundle('index.js', dest(env), {
+		debug: !isProduction,
+		minify: isProduction,
+	})
+	copyStatic('static/**/*', dest(env), { base: './static' })
 
-    watchJs()
-    startLr(lrPort)
-    serve(dest(env), { port: appPort, lrPort: lrPort })
+	watchJs()
+	startLr(lrPort)
+	serve(dest(env), { port: appPort, lrPort: lrPort })
 })
 
 gulp.task('lint', lint)
 
 function lint (done) {
-  gulp.src([ 'index.js', 'server.js', 'lib/**/*.js' ])
-    .pipe(eslint())
-    .pipe(eslint.format())
-    .resume()
-    .on('end', done)
+	gulp.src([ 'index.js', 'server.js', 'lib/**/*.js' ])
+		.pipe(eslint())
+		.pipe(eslint.format())
+		.resume()
+		.on('end', done)
 }
 
 function watchJs () {
-  gulp.watch([ './index.js', './server.js', './lib/**/*.js' ], [ 'lint' ])
+	gulp.watch([ './index.js', './server.js', './lib/**/*.js' ], [ 'lint' ])
 }

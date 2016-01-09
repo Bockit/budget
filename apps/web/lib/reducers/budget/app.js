@@ -1,4 +1,4 @@
-import { Map, List, fromJS } from 'immutable'
+import { Map, fromJS } from 'immutable'
 
 // Default to posts page
 const initialState = Map({

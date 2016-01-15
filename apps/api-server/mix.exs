@@ -30,13 +30,16 @@ defmodule BudgetApi.Mixfile do
   #
   # Type `mix help deps` for examples and options.
   defp deps do
-    [{:phoenix, "~> 1.0.4"},
-     {:phoenix_ecto, "~> 1.1"},
-     {:postgrex, ">= 0.0.0"},
-     {:phoenix_html, "~> 2.1"},
-     {:phoenix_live_reload, "~> 1.0", only: :dev},
-     {:cowboy, "~> 1.0"},
-     {:plug_graphql, "~> 0.0.7"}]
+    [
+      {:phoenix, "~> 1.0.4"},
+      {:phoenix_ecto, "~> 1.1"},
+      {:postgrex, ">= 0.0.0"},
+      {:phoenix_html, "~> 2.1"},
+      {:phoenix_live_reload, "~> 1.0", only: :dev},
+      {:cowboy, "~> 1.0"},
+      {:graphql, github: "joshprice/graphql-elixir", ref: "c7107faecae7e26f8647613319b52ea3174c5185", override: true},
+      {:plug_graphql, github: "joshprice/plug_graphql", ref: "21e42b00cdd9d689f5f048859e66f253d1c8d3e7"},
+    ]
   end
 
   # Aliases are shortcut or tasks specific to the current project.

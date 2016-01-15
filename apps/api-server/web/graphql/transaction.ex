@@ -2,34 +2,30 @@ defmodule BudgetApi.GraphQL.Transaction do
   import Ecto.Query
 
   alias __MODULE__, as: Transaction
-  alias GraphQL.ObjectType
-  alias GraphQL.List
+  alias GraphQL.Type.ObjectType
+  alias GraphQL.Type.List
+  alias GraphQL.Type.ID
+  alias GraphQL.Type.String
+  alias GraphQL.Type.Float
+  alias GraphQL.Type.Boolean
   alias BudgetApi.GraphQL.Tag
 
-  def base_schema do
+  def schema do
     %ObjectType{
       name: "Transaction",
       description: "A payment made or received.",
-      fields: %{
-        id: %{type: "ID"},
-        timestamp: %{type: "String"},
-        amount: %{type: "Float"},
-        description: %{type: "String"},
-        audited: %{type: "Boolean"},
-      },
+      fields: quote do %{
+        id: %{type: %ID{}},
+        timestamp: %{type: %String{}},
+        amount: %{type: %Float{}},
+        description: %{type: %String{}},
+        audited: %{type: %Boolean{}},
+        tags: %{
+          type: %List{of_type: Tag.schema},
+          resolve: {Transaction, :resolve_tags},
+        },
+      } end,
     }
-  end
-
-  def schema(0) do
-    base_schema
-  end
-  def schema(depth) do
-    Map.put(base_schema, :fields, Map.merge(base_schema.fields, %{
-      tags: %{
-        type: %List{of_type: Tag.schema(depth - 1)},
-        resolve: &Transaction.resolve_tags/3
-      }
-    }))
   end
 
   def resolve_single(_, %{id: id}, _) do
@@ -60,7 +56,7 @@ defmodule BudgetApi.GraphQL.Transaction do
     Map.take(model, [:id, :timestamp, :amount, :description, :audited])
   end
 
-  defp resolve_tags(%{id: id}, _, _) do
+  def resolve_tags(%{id: id}, _, _) do
     query = from t in BudgetApi.Tag,
       inner_join: rt in assoc(t, :recurring_tags),
       where: rt.recurring_id == ^id

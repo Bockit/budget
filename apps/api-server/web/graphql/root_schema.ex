@@ -34,8 +34,8 @@ defmodule BudgetApi.GraphQL.RootSchema do
   def schema do
     %Schema{
       query: %ObjectType{
-        name: "Budget API",
-        description: "The root query",
+        name: "Queries",
+        description: "Personal budget api Queries",
         fields: %{
           tag: id("Tag", Tag.schema, {Tag, :resolve_single}),
           tags: list("Tags", Tag.schema, {Tag, :resolve_list}),
@@ -46,6 +46,13 @@ defmodule BudgetApi.GraphQL.RootSchema do
           transaction: id("Transaction", Transaction.schema, {Transaction, :resolve_single}),
           transactions: list("Transactions", Transaction.schema, {Transaction, :resolve_list}),
         }
+      },
+      mutation: %ObjectType{
+        name: "Mutations",
+        description: "Personal budget api mutations",
+        fields: %{
+          createTransaction: BudgetApi.GraphQL.Mutation.CreateTransaction.schema
+        },
       }
     }
   end

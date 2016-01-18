@@ -1,16 +1,19 @@
 defmodule BudgetApi.GraphQL.RootSchema do
+
+  alias __MODULE__, as: RootSchema
   alias GraphQL.Schema
   alias GraphQL.Type.ObjectType
   alias GraphQL.Type.List
   alias GraphQL.Type.ID
   alias GraphQL.Type.Int
+  alias GraphQL.Type.String
   alias BudgetApi.GraphQL.Tag
   alias BudgetApi.GraphQL.Recurring
   alias BudgetApi.GraphQL.Transaction
 
   defp list(name, schema, resolve) do
     %{
-      type: %List{of_type: schema},
+      type: %List{ofType: schema},
       name: name,
       args: %{
         offset: %{type: %Int{}},
@@ -51,9 +54,14 @@ defmodule BudgetApi.GraphQL.RootSchema do
         name: "Mutations",
         description: "Personal budget api mutations",
         fields: %{
+          # createTransaction: BudgetApi.GraphQL.Mutation.CreateTransaction.schema
           createTransaction: BudgetApi.GraphQL.Mutation.CreateTransaction.schema
         },
       }
     }
+  end
+
+  def resolve(_, %{echo: echo}, _) do
+    %{message: echo}
   end
 end

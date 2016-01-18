@@ -17,11 +17,11 @@ defmodule BudgetApi.GraphQL.Tag do
         id: %{type: %ID{}},
         tag: %{type: %String{}},
         recurrings: %{
-          type: %List{of_type: Recurring.schema},
+          type: %List{ofType: Recurring.schema},
           resolve: {Tag, :resolve_recurrings},
         },
         transactions: %{
-          type: %List{of_type: Transaction.schema},
+          type: %List{ofType: Transaction.schema},
           resolve: {Tag, :resolve_transactions},
         },
       } end,
@@ -29,9 +29,7 @@ defmodule BudgetApi.GraphQL.Tag do
   end
 
   def resolve_single(_, %{id: id}, _) do
-    BudgetApi.Tag
-    |> BudgetApi.Repo.get!(id)
-    |> serialise
+    BudgetApi.Repo.get!(BudgetApi.Tag, id)
   end
 
   def resolve_list(_, %{offset: offset, limit: limit}, _) do
@@ -41,7 +39,6 @@ defmodule BudgetApi.GraphQL.Tag do
 
     query
     |> BudgetApi.Repo.all
-    |> Enum.map(&serialise/1)
   end
   def resolve_list(_, %{offset: offset}, _) do
     resolve_list(%{}, %{offset: offset, limit: 10}, %{})
@@ -53,10 +50,6 @@ defmodule BudgetApi.GraphQL.Tag do
     resolve_list(%{}, %{offset: 0, limit: 10}, %{})
   end
 
-  def serialise(model) do
-    Map.take(model, [:id, :tag])
-  end
-
   def resolve_recurrings(%{id: id}, _, _) do
     query = from r in BudgetApi.Recurring,
       inner_join: rt in assoc(r, :recurring_tags),
@@ -64,7 +57,6 @@ defmodule BudgetApi.GraphQL.Tag do
 
     query
     |> BudgetApi.Repo.all
-    |> Enum.map(&Recurring.serialise/1)
   end
 
   def resolve_transactions(%{id: id}, _, _) do
@@ -74,6 +66,5 @@ defmodule BudgetApi.GraphQL.Tag do
 
     query
     |> BudgetApi.Repo.all
-    |> Enum.map(&Transaction.serialise/1)
   end
 end

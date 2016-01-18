@@ -37,8 +37,8 @@ defmodule BudgetApi.Mixfile do
       {:phoenix_html, "~> 2.1"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:cowboy, "~> 1.0"},
-      {:graphql, github: "joshprice/graphql-elixir", ref: "c7107faecae7e26f8647613319b52ea3174c5185", override: true},
-      {:plug_graphql, github: "joshprice/plug_graphql", ref: "21e42b00cdd9d689f5f048859e66f253d1c8d3e7"},
+      {:graphql, github: "joshprice/graphql-elixir", override: true},
+      {:plug_graphql, github: "joshprice/plug_graphql"},
     ]
   end
 

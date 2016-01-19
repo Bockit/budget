@@ -17,3 +17,111 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
   * Docs: http://hexdocs.pm/phoenix
   * Mailing list: http://groups.google.com/group/phoenix-talk
   * Source: https://github.com/phoenixframework/phoenix
+
+Sample GraphQL Queries
+----------------------
+
+* real create transaction mutation
+
+```graphql
+mutation CreateTransaction {
+    createTransaction(
+        timestamp: "2016-01-18T21:37:30Z"
+        amount: 50.0
+        description: "That was my grandfather's haunch."
+        tags: ["a","b","c"]
+    ) {
+        amount
+        id
+        description
+        timestamp
+        audited
+        tags {
+            tag
+        }
+    }
+}
+```
+
+-----
+
+* real get transaction by id query
+
+```graphql
+query TransactionById {
+    transaction(id: 21) {
+        amount
+        id
+        description
+        timestamp
+        audited
+        tags {
+            tag
+        }
+    }
+}
+```
+
+-----
+
+* real create recurring mutation
+
+```graphql
+mutation CreateRecurring {
+    createRecurring(
+        frequency: "WEEKLY"
+        amount: 50.0
+        description: "That was my grandfather's haunch."
+        tags: ["a","b","c"]
+    ) {
+        amount
+        id
+        description
+        frequency
+        tags {
+            tag
+        }
+    }
+}
+```
+
+-----
+
+* multiple operations body
+
+```graphql
+mutation CreateRecurring {
+    createRecurring(
+        frequency: "WEEKLY"
+        amount: 50.0
+        description: "That was my grandfather's haunch."
+        tags: ["a","b","c"]
+    ) {
+        amount
+        id
+        description
+        frequency
+        tags {
+            tag
+        }
+    }
+}
+
+mutation CreateTransaction {
+    createTransaction(
+        timestamp: "2016-01-18T21:37:30Z"
+        amount: 50.0
+        description: "That was my grandfather's haunch."
+        tags: ["a","b","c"]
+    ) {
+        amount
+        id
+        description
+        timestamp
+        audited
+        tags {
+            tag
+        }
+    }
+}
+```

@@ -1,12 +1,9 @@
 defmodule BudgetApi.GraphQL.RootSchema do
-
-  alias __MODULE__, as: RootSchema
   alias GraphQL.Schema
   alias GraphQL.Type.ObjectType
   alias GraphQL.Type.List
   alias GraphQL.Type.ID
   alias GraphQL.Type.Int
-  alias GraphQL.Type.String
   alias BudgetApi.GraphQL.Tag
   alias BudgetApi.GraphQL.Recurring
   alias BudgetApi.GraphQL.Transaction
@@ -54,8 +51,11 @@ defmodule BudgetApi.GraphQL.RootSchema do
         name: "Mutations",
         description: "Personal budget api mutations",
         fields: %{
-          # createTransaction: BudgetApi.GraphQL.Mutation.CreateTransaction.schema
-          createTransaction: BudgetApi.GraphQL.Mutation.CreateTransaction.schema
+          createTransaction: BudgetApi.GraphQL.Mutation.CreateTransaction.schema,
+          createRecurring: BudgetApi.GraphQL.Mutation.CreateRecurring.schema,
+
+          # addTagToTransaction: BudgetApi.GraphQL.Mutation.AddTagToTransaction.schema,
+          # addTagToRecurring: BudgetApi.GraphQL.Mutation.AddTagToRecurring.schema,
         },
       }
     }

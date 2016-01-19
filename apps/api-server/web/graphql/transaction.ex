@@ -52,8 +52,8 @@ defmodule BudgetApi.GraphQL.Transaction do
 
   def resolve_tags(%{id: id}, _, _) do
     query = from t in BudgetApi.Tag,
-      inner_join: rt in assoc(t, :recurring_tags),
-      where: rt.recurring_id == ^id
+      inner_join: rt in assoc(t, :transaction_tags),
+      where: rt.transaction_id == ^id
 
     query
     |> BudgetApi.Repo.all

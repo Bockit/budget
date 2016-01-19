@@ -23,48 +23,64 @@ defmodule BudgetApi.GraphQL.Mutation.CreateTransaction do
   end
 
   def resolve(_, args, _) do
-    transaction = create_transaction(args.amount, args.timestamp, args.description)
-    create_tag_relations(args.tags, transaction)
+    result = BudgetApi.Repo.transaction(fn() ->
+      build_transaction(args.amount, args.timestamp, args.description, args.tags)
+    end)
+
+    case result do
+      {:ok, transaction} -> transaction
+      {:error, _error} -> nil
+    end
+  end
+
+  defp build_transaction(amount, timestamp, description, tags) do
+    transaction = create_transaction(amount, timestamp, description)
+    for tag <- ensure_tags(tags) do
+      create_transaction_tag(tag.id, transaction.id)
+    end
     transaction
   end
 
   defp create_transaction(amount, timestamp, description) do
-    changeset = Transaction.changeset(%Transaction{}, %{
+    Transaction.changeset(%Transaction{}, %{
       amount: amount,
       timestamp: timestamp,
       description: description,
       audited: false,
     })
-    BudgetApi.Repo.insert!(changeset)
+    |> BudgetApi.Repo.insert!
   end
 
-  defp create_tag_relations(tags, transaction) do
-    tags
-    |> ensure_tags
-    |> create_transaction_tags(transaction.id)
+  defp create_tag(tag) do
+    Tag.changeset(%Tag{}, %{
+      tag: tag
+    })
+    |> BudgetApi.Repo.insert!
+  end
+
+  defp create_transaction_tag(tag_id, transaction_id) do
+    TransactionTag.changeset(%TransactionTag{}, %{
+      tag_id: tag_id,
+      transaction_id: transaction_id,
+    })
+    |> BudgetApi.Repo.insert!
   end
 
   defp ensure_tags(tags) do
-    query = from t in Tag,
-      where: t.tag in tags
+    current_tags = find_tags(tags)
+    current_tags_tags = Enum.map(current_tags, &(&1.tag))
 
-    found = query
-    |> BudgetApi.Repo.all
-    |> Enum.map(&(&1.tag))
+    missing_tags = Enum.filter(tags, &(!(&1 in current_tags_tags)))
+    created_tags = for tag <- missing_tags, do: create_tag(tag)
 
-    needed = tags
-    |> Enum.filter(&(&1 in found))
-
-    # Bulk insert
+    current_tags ++ created_tags
   end
 
-  defp create_transaction_tags(tags, transaction_id) do
-    # changeset = TransactionTag.changeset(%TransactionTag{}, %{
-    #   tag_id: tag_id,
-    #   transaction_id: transaction_id,
-    # })
-    # BudgetApi.Repo.insert!(changeset)
+  defp find_tags(tags) do
+    query = from t in Tag,
+      where: t.tag in ^tags
 
-    # Bulk insert
+    query
+    |> BudgetApi.Repo.all
   end
 end

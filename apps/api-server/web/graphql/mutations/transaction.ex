@@ -1,36 +1,46 @@
-defmodule BudgetApi.GraphQL.Mutation.CreateTransaction do
+defmodule BudgetApi.GraphQL.Mutation.Transaction do
   import Ecto.Query
 
-  alias __MODULE__, as: CreateTransaction
-  alias GraphQL.Type.String
-  alias GraphQL.Type.Float
-  alias GraphQL.Type.List
-  alias BudgetApi.Tag
-  alias BudgetApi.Transaction
-  alias BudgetApi.TransactionTag
+  alias BudgetApi.GraphQL.{Mutation, Type}
+  alias GraphQL.Type.{String, Float, List, ID}
 
-  def schema do
+  def create do
     %{
-      type: BudgetApi.GraphQL.Transaction.schema,
+      type: BudgetApi.GraphQL.Type.Transaction.type,
       args: %{
         timestamp: %{type: %String{}},
         amount: %{type: %Float{}},
         description: %{type: %String{}},
         tags: %{type: %List{ofType: %String{}}},
       },
-      resolve: {CreateTransaction, :resolve},
+      resolve: {Mutation.Transaction, :resolve_create},
     }
   end
 
-  def resolve(_, args, _) do
-    result = BudgetApi.Repo.transaction(fn() ->
-      build_transaction(args.amount, args.timestamp, args.description, args.tags)
-    end)
+  def resolve_create(_, args, _) do
+    # result = BudgetApi.Repo.transaction(fn() ->
+    #   build_transaction(args.amount, args.timestamp, args.description, args.tags)
+    # end)
 
-    case result do
-      {:ok, transaction} -> transaction
-      {:error, _error} -> nil
-    end
+    # case result do
+    #   {:ok, transaction} -> transaction
+    #   {:error, _error} -> nil
+    # end
+  end
+
+  def add_tag do
+    %{
+      type: Type.Transaction.type,
+      args: %{
+        id: %{type: %ID{}},
+        tag: %{type: %String{}},
+      },
+      resolve: {Mutation.Transaction, :resolve_add_tag}
+    }
+  end
+
+  def resolve_add_tag(_, args, _) do
+
   end
 
   defp build_transaction(amount, timestamp, description, tags) do
@@ -42,7 +52,7 @@ defmodule BudgetApi.GraphQL.Mutation.CreateTransaction do
   end
 
   defp create_transaction(amount, timestamp, description) do
-    Transaction.changeset(%Transaction{}, %{
+    BudgetApi.Transaction.changeset(%BudgetApi.Transaction{}, %{
       amount: amount,
       timestamp: timestamp,
       description: description,
@@ -52,14 +62,14 @@ defmodule BudgetApi.GraphQL.Mutation.CreateTransaction do
   end
 
   defp create_tag(tag) do
-    Tag.changeset(%Tag{}, %{
+    BudgetApi.Tag.changeset(%BudgetApi.Tag{}, %{
       tag: tag
     })
     |> BudgetApi.Repo.insert!
   end
 
   defp create_transaction_tag(tag_id, transaction_id) do
-    TransactionTag.changeset(%TransactionTag{}, %{
+    BudgetApi.TransactionTag.changeset(%BudgetApi.TransactionTag{}, %{
       tag_id: tag_id,
       transaction_id: transaction_id,
     })
@@ -77,7 +87,7 @@ defmodule BudgetApi.GraphQL.Mutation.CreateTransaction do
   end
 
   defp find_tags(tags) do
-    query = from t in Tag,
+    query = from t in BudgetApi.Tag,
       where: t.tag in ^tags
 
     query

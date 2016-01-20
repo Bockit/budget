@@ -1,36 +1,46 @@
-defmodule BudgetApi.GraphQL.Mutation.CreateRecurring do
+defmodule BudgetApi.GraphQL.Mutation.Recurring do
   import Ecto.Query
 
-  alias __MODULE__, as: CreateRecurring
-  alias GraphQL.Type.String
-  alias GraphQL.Type.Float
-  alias GraphQL.Type.List
-  alias BudgetApi.Tag
-  alias BudgetApi.Recurring
-  alias BudgetApi.RecurringTag
+  alias BudgetApi.GraphQL.{Mutation, Type}
+  alias GraphQL.Type.{String, Float, List, ID}
 
-  def schema do
+  def create do
     %{
-      type: BudgetApi.GraphQL.Recurring.schema,
+      type: Type.Recurring.type,
       args: %{
         frequency: %{type: %String{}},
         amount: %{type: %Float{}},
         description: %{type: %String{}},
         tags: %{type: %List{ofType: %String{}}},
       },
-      resolve: {CreateRecurring, :resolve},
+      resolve: {Mutation.Recurring, :create_resolve},
     }
   end
 
-  def resolve(_, args, _) do
-    result = BudgetApi.Repo.transaction(fn() ->
-      build_recurring(args.amount, args.frequency, args.description, args.tags)
-    end)
+  def create_resolve(_, args, _) do
+    # result = BudgetApi.Repo.transaction(fn() ->
+    #   build_recurring(args.amount, args.frequency, args.description, args.tags)
+    # end)
 
-    case result do
-      {:ok, recurring} -> recurring
-      {:error, _error} -> nil
-    end
+    # case result do
+    #   {:ok, recurring} -> recurring
+    #   {:error, _error} -> nil
+    # end
+  end
+
+  def add_tag do
+    %{
+      type: Type.Recurring.type,
+      args: %{
+        id: %{type: %ID{}},
+        tag: %{type: %String{}},
+      },
+      resolve: {Mutation.Recurring, :resolve_add_tag}
+    }
+  end
+
+  def resolve_add_tag(_, args, _) do
+
   end
 
   defp build_recurring(amount, frequency, description, tags) do
@@ -42,7 +52,7 @@ defmodule BudgetApi.GraphQL.Mutation.CreateRecurring do
   end
 
   defp create_recurring(amount, frequency, description) do
-    Recurring.changeset(%Recurring{}, %{
+    BudgetApi.Recurring.changeset(%BudgetApi.Recurring{}, %{
       amount: amount,
       frequency: frequency,
       description: description,
@@ -51,14 +61,14 @@ defmodule BudgetApi.GraphQL.Mutation.CreateRecurring do
   end
 
   defp create_tag(tag) do
-    Tag.changeset(%Tag{}, %{
+    BudgetApi.Tag.changeset(%BudgetApi.Tag{}, %{
       tag: tag
     })
     |> BudgetApi.Repo.insert!
   end
 
   defp create_recurring_tag(tag_id, recurring_id) do
-    RecurringTag.changeset(%RecurringTag{}, %{
+    BudgetApi.RecurringTag.changeset(%BudgetApi.RecurringTag{}, %{
       tag_id: tag_id,
       recurring_id: recurring_id,
     })
@@ -76,7 +86,7 @@ defmodule BudgetApi.GraphQL.Mutation.CreateRecurring do
   end
 
   defp find_tags(tags) do
-    query = from t in Tag,
+    query = from t in BudgetApi.Tag,
       where: t.tag in ^tags
 
     query

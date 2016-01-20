@@ -29,8 +29,8 @@ defmodule BudgetApi.Query.Tag do
 
   def for_transaction(query, transaction_id) do
     from r in query,
-      inner_join: rt in assoc(r, :recurring_tags),
-      where: rt.transaction_id == ^transaction_id
+      inner_join: tt in assoc(r, :transaction_tags),
+      where: tt.transaction_id == ^transaction_id
 
     BudgetApi.Repo.all(query)
   end

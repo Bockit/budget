@@ -25,7 +25,7 @@ defmodule BudgetApi.Workflows.Tag do
 
   defp create_tags([], created), do: {:ok, created}
   defp create_tags([next|rest], created) do
-    with {:ok, tag}     <- create(next),
+    with {:ok, tag} <- create(next),
          {:ok, created} <- create_tags(rest, [tag|created]),
      do: {:ok, created}
   end

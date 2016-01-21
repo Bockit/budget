@@ -22,17 +22,17 @@ defmodule BudgetApi.Workflows.Recurring do
   def create_recurring_with_tags(amount, frequency, description, tags) do
     with {:ok, tags} <- Workflows.Tag.ensure_tags(tags),
          {:ok, recurring} <- create(amount, frequency, description),
-         {:ok, _recurring_tags} <- attach_tags(recurring, tags),
+         {:ok, _recurring_tags} <- attach_tags(recurring.id, tags),
          recurring <- Map.put(recurring, :tags, tags),
      do: {:ok, recurring}
   end
 
-  def attach_tags(recurring, tags), do: attach_tags(recurring, tags, [])
+  def attach_tags(recurring_id, tags), do: attach_tags(recurring_id, tags, [])
 
   defp attach_tags(_, [], attached), do: {:ok, attached}
-  defp attach_tags(recurring, [next|rest], attached) do
-    with {:ok, recurring_tag} <- create_recurring_tag(recurring.id, next.id),
-         {:ok, attached} <- attach_tags(recurring, rest, [recurring_tag|attached]),
+  defp attach_tags(recurring_id, [next|rest], attached) do
+    with {:ok, recurring_tag} <- create_recurring_tag(recurring_id, next.id),
+         {:ok, attached} <- attach_tags(recurring_id, rest, [recurring_tag|attached]),
      do: {:ok, attached}
   end
 end

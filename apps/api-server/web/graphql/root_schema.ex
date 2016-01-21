@@ -22,6 +22,7 @@ defmodule BudgetApi.GraphQL.RootSchema do
         description: "Personal budget api mutations",
         fields: %{
           createRecurring: Mutation.Recurring.create,
+          addTagsToRecurring: Mutation.Recurring.add_tags,
         },
       }
     }

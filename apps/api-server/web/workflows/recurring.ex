@@ -35,4 +35,10 @@ defmodule BudgetApi.Workflows.Recurring do
          {:ok, attached} <- attach_tags(recurring_id, rest, [recurring_tag|attached]),
      do: {:ok, attached}
   end
+
+  def add_tags(recurring_id, tags) do
+    with {:ok, tags} <- Workflows.Tag.ensure_tags(tags),
+         {:ok, attached} <- attach_tags(recurring_id, tags),
+     do: {:ok, attached}
+  end
 end

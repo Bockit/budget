@@ -1,7 +1,7 @@
 defmodule BudgetApi.GraphQL.Mutation.Recurring do
-  alias BudgetApi.{Repo, Workflows}
+  alias BudgetApi.{Repo, Workflows, Query}
   alias BudgetApi.GraphQL.{Mutation, Type, Helpers}
-  alias GraphQL.Type.{String, Float}
+  alias GraphQL.Type.{String, Float, ID}
 
   def create do
     %{
@@ -12,43 +12,36 @@ defmodule BudgetApi.GraphQL.Mutation.Recurring do
         description: %{type: %String{}},
         tags: Helpers.list(%String{}),
       },
-      resolve: {Mutation.Recurring, :resolve_create},
+      resolve: {Mutation.Recurring, :create_resolve},
     }
   end
 
-  def resolve_create(_, args, _) do
+  def create_resolve(_, args, _) do
     %{amount: amount, frequency: frequency, description: description} = args
     tags = args.tags || []
 
-    transaction_result = Repo.transaction(fn() ->
-      result = Workflows.Recurring.create_recurring_with_tags(
+    Workflows.graphql_resolving_transaction(fn() ->
+      Workflows.Recurring.create_recurring_with_tags(
         amount, frequency, description, tags
       )
-
-      case result do
-        {:ok, recurring} -> recurring
-        {:error, error} -> Repo.rollback(error)
-      end
     end)
-
-    case transaction_result do
-      {:ok, recurring} -> recurring
-      {:error, _error} -> nil
-    end
   end
 
-  # def add_tag do
-  #   %{
-  #     type: Type.Recurring.type,
-  #     args: %{
-  #       id: %{type: %ID{}},
-  #       tag: %{type: %String{}},
-  #     },
-  #     resolve: {Mutation.Recurring, :add_tag_resolve}
-  #   }
-  # end
+  def add_tags do
+    %{
+      type: Type.Recurring.type,
+      args: %{
+        id: %{type: %ID{}},
+        tags: Helpers.list(%String{}),
+      },
+      resolve: {Mutation.Recurring, :add_tags_resolve}
+    }
+  end
 
-  # def add_tag_resolve(_, args, _) do
-
-  # end
+  def add_tags_resolve(_, %{id: recurring_id, tags: tags}, _) do
+    Workflows.graphql_resolving_transaction(fn() ->
+      with {:ok, _} <- Workflows.Recurring.add_tags(recurring_id, tags),
+       do: {:ok, Query.Recurring.by_id(recurring_id)}
+    end)
+  end
 end

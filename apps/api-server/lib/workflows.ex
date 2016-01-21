@@ -2,7 +2,7 @@ defmodule Workflows do
   def transaction(function) do
     Repo.transaction(fn() ->
       case function.() do
-        {:ok, recurring} -> recurring
+        {:ok, result} -> result
         {:error, error} -> Repo.rollback(error)
       end
     end)
@@ -10,7 +10,7 @@ defmodule Workflows do
 
   def graphql_resolving_transaction(function) do
     case transaction(function) do
-      {:ok, resolution} -> resolution
+      {:ok, result} -> result
       {:error, _error} -> nil
     end
   end

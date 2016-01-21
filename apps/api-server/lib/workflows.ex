@@ -1,4 +1,6 @@
 defmodule Workflows do
+  alias BudgetApi.Repo
+
   def transaction(function) do
     Repo.transaction(fn() ->
       case function.() do

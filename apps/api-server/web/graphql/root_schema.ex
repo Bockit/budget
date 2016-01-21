@@ -1,7 +1,7 @@
 defmodule BudgetApi.GraphQL.RootSchema do
   alias GraphQL.Schema
-  alias GraphQL.Type.{ObjectType, List, ID, Int}
-  alias BudgetApi.GraphQL.{Query, Mutatation}
+  alias GraphQL.Type.ObjectType
+  alias BudgetApi.GraphQL.{Query, Mutation}
 
   def schema do
     %Schema{
@@ -17,16 +17,13 @@ defmodule BudgetApi.GraphQL.RootSchema do
           transactions: Query.Transaction.paginated_list,
         }
       },
-      # mutation: %ObjectType{
-      #   name: "Mutations",
-      #   description: "Personal budget api mutations",
-      #   fields: %{
-      #     createTransaction: Mutation.Transaction.create,
-      #     createRecurring: Mutation.Recurring.create,
-      #     addTagToTransaction: Mutation.Transaction.add_tag,
-      #     addTagToRecurring: Mutation.Transaction.add_tag,
-      #   },
-      # }
+      mutation: %ObjectType{
+        name: "Mutations",
+        description: "Personal budget api mutations",
+        fields: %{
+          createRecurring: Mutation.Recurring.create,
+        },
+      }
     }
   end
 end

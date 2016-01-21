@@ -1,7 +1,7 @@
 defmodule BudgetApi.GraphQL.Helpers do
   alias GraphQL.Type.{ID, Int, List}
 
-  def by_id(type, metadata) do
+  def by_id(type, metadata \\ []) do
     definition = %{
       type: type,
       args: %{
@@ -11,14 +11,14 @@ defmodule BudgetApi.GraphQL.Helpers do
     merge(definition, metadata)
   end
 
-  def list(type, metadata) do
+  def list(type, metadata \\ []) do
     definition = %{
       type: %List{ofType: type},
     }
     merge(definition, metadata)
   end
 
-  def paginated_list(type, metadata) do
+  def paginated_list(type, metadata \\ []) do
     definition = %{
       type: %List{ofType: type},
       args: %{

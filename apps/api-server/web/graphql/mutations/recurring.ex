@@ -1,8 +1,7 @@
 defmodule BudgetApi.GraphQL.Mutation.Recurring do
-  import Ecto.Query
-
-  alias BudgetApi.GraphQL.{Mutation, Type}
-  alias GraphQL.Type.{String, Float, List, ID}
+  alias BudgetApi.{Repo, Workflows}
+  alias BudgetApi.GraphQL.{Mutation, Type, Helpers}
+  alias GraphQL.Type.{String, Float}
 
   def create do
     %{
@@ -11,85 +10,45 @@ defmodule BudgetApi.GraphQL.Mutation.Recurring do
         frequency: %{type: %String{}},
         amount: %{type: %Float{}},
         description: %{type: %String{}},
-        tags: %{type: %List{ofType: %String{}}},
+        tags: Helpers.list(%String{}),
       },
-      resolve: {Mutation.Recurring, :create_resolve},
+      resolve: {Mutation.Recurring, :resolve_create},
     }
   end
 
-  def create_resolve(_, args, _) do
-    # result = BudgetApi.Repo.transaction(fn() ->
-    #   build_recurring(args.amount, args.frequency, args.description, args.tags)
-    # end)
+  def resolve_create(_, args, _) do
+    %{amount: amount, frequency: frequency, description: description} = args
+    tags = args.tags || []
 
-    # case result do
-    #   {:ok, recurring} -> recurring
-    #   {:error, _error} -> nil
-    # end
-  end
+    transaction_result = Repo.transaction(fn() ->
+      result = Workflows.Recurring.create_recurring_with_tags(
+        amount, frequency, description, tags
+      )
 
-  def add_tag do
-    %{
-      type: Type.Recurring.type,
-      args: %{
-        id: %{type: %ID{}},
-        tag: %{type: %String{}},
-      },
-      resolve: {Mutation.Recurring, :resolve_add_tag}
-    }
-  end
+      case result do
+        {:ok, recurring} -> recurring
+        {:error, error} -> Repo.rollback(error)
+      end
+    end)
 
-  def resolve_add_tag(_, args, _) do
-
-  end
-
-  defp build_recurring(amount, frequency, description, tags) do
-    recurring = create_recurring(amount, frequency, description)
-    for tag <- ensure_tags(tags) do
-      create_recurring_tag(tag.id, recurring.id)
+    case transaction_result do
+      {:ok, recurring} -> recurring
+      {:error, _error} -> nil
     end
-    recurring
   end
 
-  defp create_recurring(amount, frequency, description) do
-    BudgetApi.Recurring.changeset(%BudgetApi.Recurring{}, %{
-      amount: amount,
-      frequency: frequency,
-      description: description,
-    })
-    |> BudgetApi.Repo.insert!
-  end
+  # def add_tag do
+  #   %{
+  #     type: Type.Recurring.type,
+  #     args: %{
+  #       id: %{type: %ID{}},
+  #       tag: %{type: %String{}},
+  #     },
+  #     resolve: {Mutation.Recurring, :add_tag_resolve}
+  #   }
+  # end
 
-  defp create_tag(tag) do
-    BudgetApi.Tag.changeset(%BudgetApi.Tag{}, %{
-      tag: tag
-    })
-    |> BudgetApi.Repo.insert!
-  end
+  # def add_tag_resolve(_, args, _) do
 
-  defp create_recurring_tag(tag_id, recurring_id) do
-    BudgetApi.RecurringTag.changeset(%BudgetApi.RecurringTag{}, %{
-      tag_id: tag_id,
-      recurring_id: recurring_id,
-    })
-    |> BudgetApi.Repo.insert!
-  end
-
-  defp ensure_tags(tags) do
-    current_tags = find_tags(tags)
-    current_tags_tags = Enum.map(current_tags, &(&1.tag))
-
-    missing_tags = Enum.filter(tags, &(!(&1 in current_tags_tags)))
-    created_tags = for tag <- missing_tags, do: create_tag(tag)
-
-    current_tags ++ created_tags
-  end
-
-  defp find_tags(tags) do
-    query = from t in BudgetApi.Tag,
-      where: t.tag in ^tags
-
-    query
-    |> BudgetApi.Repo.all
-  end
+  # end
 end

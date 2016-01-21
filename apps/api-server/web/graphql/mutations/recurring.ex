@@ -21,9 +21,7 @@ defmodule BudgetApi.GraphQL.Mutation.Recurring do
     tags = args.tags || []
 
     Workflows.graphql_resolving_transaction(fn() ->
-      Workflows.Recurring.create_recurring_with_tags(
-        amount, frequency, description, tags
-      )
+      Workflows.Recurring.create_recurring_with_tags(amount, frequency, description, tags)
     end)
   end
 

@@ -18,7 +18,8 @@ defmodule BudgetApi.GraphQL.Query.Transaction do
   end
 
   def resolve_by_id(_, %{id: id}, _) do
-    Query.Transaction.by_id(id)
+    with {:ok, transaction} <- Query.Transaction.by_id(id),
+     do: transaction
   end
 
   def resolve_paginated_list(_, args, _) do

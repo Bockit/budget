@@ -23,6 +23,7 @@ defmodule BudgetApi.GraphQL.RootSchema do
         fields: %{
           createRecurring: Mutation.Recurring.create,
           addTagsToRecurring: Mutation.Recurring.add_tags,
+          removeTagsFromRecurring: Mutation.Recurring.remove_tags,
         },
       }
     }

@@ -18,7 +18,8 @@ defmodule BudgetApi.GraphQL.Query.Recurring do
   end
 
   def resolve_by_id(_, %{id: id}, _) do
-    Query.Recurring.by_id(id)
+    with {:ok, recurring} <- Query.Recurring.by_id(id),
+     do: recurring
   end
 
   def resolve_paginated_list(_, args, _) do

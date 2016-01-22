@@ -8,7 +8,7 @@ defmodule BudgetApi.Query.Transaction do
   end
 
   def by_id(id) do
-    BudgetApi.Repo.get!(Transaction, id)
+    BudgetApi.Repo.get(Transaction, id)
   end
 
   def paginated(query, offset, limit) do

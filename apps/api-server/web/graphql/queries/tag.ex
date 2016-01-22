@@ -18,7 +18,8 @@ defmodule BudgetApi.GraphQL.Query.Tag do
   end
 
   def resolve_by_id(_, %{id: id}, _) do
-    Query.Tag.by_id(id)
+    with {:ok, tag} <- Query.Tag.by_id(id),
+     do: tag
   end
 
   def resolve_paginated_list(_, args, _) do

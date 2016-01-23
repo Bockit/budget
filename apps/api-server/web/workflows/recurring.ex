@@ -47,7 +47,10 @@ defmodule BudgetApi.Workflows.Recurring do
 
   defp unattached_tags(recurring_id, tags) do
     tag_ids = Enum.map(tags, &(&1.id))
-    connections = Query.Recurring.attached_tags(recurring_id, tag_ids)
+
+    connections = Query.base
+    |> Query.Recurring.for_recurring_and_tags(recurring_id, tag_ids)
+
     attached_ids = Enum.map(connections, &(&1.tag_id))
     Enum.filter(tags, &(!(&1.id in attached_ids)))
   end

@@ -1,25 +1,25 @@
-defmodule BudgetApi.Query.RecurringTag do
+defmodule BudgetApi.Query.TransactionTag do
   import Ecto.Query
 
-  alias BudgetApi.RecurringTag
+  alias BudgetApi.TransactionTag
 
   def base do
-    from rt in RecurringTag
+    from tt in TransactionTag
   end
 
-  def by_recurring(query, recurring_id) do
-    from rt in query,
-      where: rt.recurring_id == ^recurring_id,
+  def by_recurring(query, transaction_id) do
+    from tt in query,
+      where: rt.transaction_id == ^transaction_id,
   end
 
   def for_tags(query, tag_ids) do
-    from rt in query,
+    from tt in query,
       where: rt.tag_id in ^tag_ids,
   end
 
   def for_tag_strings(query, tag_strings) do
-    from rt in query,
-      inner_join: t in assoc(rt, :tag),
+    from tt in query,
+      inner_join: t in assoc(tt, :tag),
       where: t.tag in ^tag_strings
   end
 

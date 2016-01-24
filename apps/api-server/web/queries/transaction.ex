@@ -1,29 +1,15 @@
-defmodule BudgetApi.Query.Transaction do
+defmodule BudgetApi.Query.Recurring do
   import Ecto.Query
 
-  alias BudgetApi.Transaction
+  alias BudgetApi.Recurring
 
   def base do
-    from r in Transaction
+    from r in Recurring
   end
 
-  def by_id(id) do
-    BudgetApi.Repo.get(Transaction, id)
-  end
-
-  def paginated(query, offset, limit) do
-    query = from t in query,
-      offset: ^offset,
-      limit: ^limit
-
-    BudgetApi.Repo.all(query)
-  end
-
-  def for_tag(query, tag_id) do
-    from t in query,
-      inner_join: tt in assoc(t, :transaction_tags),
+  def for_tag(queryable, tag_id) do
+    from t in queryable,
+      inner_join: tt in assoc(r, :transaction_tags),
       where: tt.tag_id == ^tag_id
-
-    BudgetApi.Repo.all(query)
   end
 end

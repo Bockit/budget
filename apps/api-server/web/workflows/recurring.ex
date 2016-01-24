@@ -1,4 +1,4 @@
-defmodule BudgetApi.Workflows.Recurring do
+defmodule BudgetApi.Workflow.Recurring do
   import Ecto.Query
 
   alias BudgetApi.{Repo, Workflows, Query}

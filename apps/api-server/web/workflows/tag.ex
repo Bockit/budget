@@ -1,4 +1,4 @@
-defmodule BudgetApi.Workflows.Tag do
+defmodule BudgetApi.Workflow.Tag do
   import Ecto.Query
 
   alias BudgetApi.{Repo, Workflows}

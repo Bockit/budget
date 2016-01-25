@@ -23,7 +23,7 @@ defmodule BudgetApi.GraphQL.Type.Transaction do
 
   def resolve_tags(%{id: id}, _, _) do
     Query.Tag.base
-    |> Query.Tag.for_recurring(id)
+    |> Query.Tag.for_transaction(id)
     |> Repo.find_all
     |> GraphQL.resolve
   end

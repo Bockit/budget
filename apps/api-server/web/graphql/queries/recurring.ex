@@ -1,4 +1,5 @@
 defmodule BudgetApi.GraphQL.Query.Recurring do
+  alias GraphQL.Type.{List,Int}
   alias BudgetApi.{Repo, Query, GraphQL}
   alias BudgetApi.GraphQL.{Type, Helpers}
 

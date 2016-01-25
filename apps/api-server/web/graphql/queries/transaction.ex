@@ -16,7 +16,7 @@ defmodule BudgetApi.GraphQL.Query.Transaction do
   end
 
   def paginated_list do
-    Helpers.by_id(Type.Transaction.type,
+    Helpers.paginated_list(Type.Transaction.type,
       name: 'Paginated transactions',
       description: 'Fetch a list of transactions given an offset and an id.',
       resolve: {GraphQL.Query.Transaction, :paginated_list_resolve})

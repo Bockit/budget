@@ -11,8 +11,15 @@ defmodule BudgetApi.Repo do
   end
 
   def find_all(queryable, opts \\ []) do
+    allow_empty = Keyword.get(opts, :allow_empty, false)
+
     case BudgetApi.Repo.all(queryable, opts) do
-      [] -> {:error, "No results"}
+      [] ->
+        if allow_empty do
+          {:ok, []}
+        else
+          {:error, "No results"}
+        end
       results -> {:ok, results}
     end
   end

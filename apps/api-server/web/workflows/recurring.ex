@@ -1,5 +1,5 @@
 defmodule BudgetApi.Workflow.Recurring do
-  alias BudgetApi.{Repo, Workflows, Query}
+  alias BudgetApi.{Repo, Workflow, Query}
   alias BudgetApi.{Recurring, RecurringTag}
 
   def create(amount, frequency, description) do
@@ -20,7 +20,7 @@ defmodule BudgetApi.Workflow.Recurring do
   end
 
   def create_recurring_with_tags(amount, frequency, description, tags) do
-    with {:ok, tags} <- Workflows.Tag.ensure_tags(tags),
+    with {:ok, tags} <- Workflow.Tag.ensure_tags(tags),
          {:ok, recurring} <- create(amount, frequency, description),
          {:ok, _recurring_tags} <- attach_tags(recurring.id, tags),
          recurring <- Map.put(recurring, :tags, tags),
@@ -37,7 +37,7 @@ defmodule BudgetApi.Workflow.Recurring do
   end
 
   def add_tags(recurring_id, tags) do
-    with {:ok, tags} <- Workflows.Tag.ensure_tags(tags),
+    with {:ok, tags} <- Workflow.Tag.ensure_tags(tags),
          filtered_tags <- unattached_tags(recurring_id, tags),
          {:ok, attached} <- attach_tags(recurring_id, filtered_tags),
      do: {:ok, attached}
@@ -46,8 +46,8 @@ defmodule BudgetApi.Workflow.Recurring do
   defp unattached_tags(recurring_id, tags) do
     tag_ids = Enum.map(tags, &(&1.id))
 
-    connections = Query.base
-    |> Query.Recurring.for_recurring_and_tags(recurring_id, tag_ids)
+    connections = Query.RecurringTag.base
+    |> Query.RecurringTag.for_recurring_and_tags(recurring_id, tag_ids)
     |> Repo.all
 
     attached_ids = Enum.map(connections, &(&1.tag_id))

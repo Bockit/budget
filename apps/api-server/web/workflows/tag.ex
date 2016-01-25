@@ -1,7 +1,7 @@
 defmodule BudgetApi.Workflow.Tag do
   import Ecto.Query
 
-  alias BudgetApi.{Repo, Workflows}
+  alias BudgetApi.Repo
   alias BudgetApi.Tag
 
   def create(tag) do

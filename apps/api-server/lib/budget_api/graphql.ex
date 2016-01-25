@@ -41,7 +41,7 @@ defmodule BudgetApi.GraphQL do
     case result do
       {:ok, resolution} -> resolution
       # Not sure what to do with this for now
-      {:error, _error} -> nil
+      {:error, error} -> raise error
     end
   end
 end

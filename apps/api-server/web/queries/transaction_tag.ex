@@ -7,7 +7,7 @@ defmodule BudgetApi.Query.TransactionTag do
     from tt in TransactionTag
   end
 
-  def by_recurring(query, transaction_id) do
+  def by_transaction(query, transaction_id) do
     from tt in query,
       where: tt.transaction_id == ^transaction_id
   end
@@ -23,15 +23,15 @@ defmodule BudgetApi.Query.TransactionTag do
       where: t.tag in ^tag_strings
   end
 
-  def for_recurring_and_tags(query, recurring_id, tag_ids) do
+  def for_transaction_and_tags(query, transaction_id, tag_ids) do
     query
-    |> by_recurring(recurring_id)
+    |> by_transaction(transaction_id)
     |> for_tags(tag_ids)
   end
 
-  def for_recurring_and_tag_strings(query, recurring_id, tag_strings) do
+  def for_transaction_and_tag_strings(query, transaction_id, tag_strings) do
     query
-    |> by_recurring(recurring_id)
+    |> by_transaction(transaction_id)
     |> for_tag_strings(tag_strings)
   end
 end

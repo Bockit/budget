@@ -25,11 +25,13 @@ defmodule BudgetApi.GraphQL.RootSchema do
           addTagsToRecurring: Mutation.Recurring.add_tags,
           removeTagsFromRecurring: Mutation.Recurring.remove_tags,
           # deleteRecurring: Mutation.Recurring.delete,
+          # updateRecurring: Mutation.Recurring.update,
 
           createTransaction: Mutation.Transaction.create,
           addTagsToTransaction: Mutation.Transaction.add_tags,
           removeTagsFromTransaction: Mutation.Transaction.remove_tags,
           # deleteTransaction: Mutation.Transaction.delete,
+          # updateTransaction: Mutation.Recurring.update,
         },
       }
     }

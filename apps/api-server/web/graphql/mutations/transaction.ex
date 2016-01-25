@@ -17,11 +17,11 @@ defmodule BudgetApi.GraphQL.Mutation.Transaction do
   end
 
   def create_resolve(_, args, _) do
-    %{amount: amount, frequency: frequency, description: description} = args
+    %{amount: amount, timestamp: timestamp, description: description} = args
     tags = args.tags || []
 
     Workflows.transaction(fn() ->
-      Workflow.Transaction.create_transaction_with_tags(amount, frequency, description, tags)
+      Workflow.Transaction.create_transaction_with_tags(amount, timestamp, description, tags)
     end)
     |> BudgetApi.GraphQL.resolve
   end
@@ -61,6 +61,7 @@ defmodule BudgetApi.GraphQL.Mutation.Transaction do
     |> Query.TransactionTag.for_transaction_and_tag_strings(transaction_id, tags)
     |> Repo.delete_all
 
-    Query.Transaction.by_id(transaction_id)
+    Repo.find(BudgetApi.Transaction, transaction_id)
+    |> BudgetApi.GraphQL.resolve
   end
 end

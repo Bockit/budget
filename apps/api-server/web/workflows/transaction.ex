@@ -1,5 +1,5 @@
 defmodule BudgetApi.Workflow.Transaction do
-  alias BudgetApi.{Repo, Workflows, Query}
+  alias BudgetApi.{Repo, Workflow, Query}
   alias BudgetApi.{Transaction, TransactionTag}
 
   def create(amount, timestamp, description) do
@@ -20,7 +20,7 @@ defmodule BudgetApi.Workflow.Transaction do
   end
 
   def create_transaction_with_tags(amount, timestamp, description, tags) do
-    with {:ok, tags} <- Workflows.Tag.ensure_tags(tags),
+    with {:ok, tags} <- Workflow.Tag.ensure_tags(tags),
          {:ok, transaction} <- create(amount, timestamp, description),
          {:ok, _transaction_tags} <- attach_tags(transaction.id, tags),
          transaction <- Map.put(transaction, :tags, tags),
@@ -37,7 +37,7 @@ defmodule BudgetApi.Workflow.Transaction do
   end
 
   def add_tags(transaction_id, tags) do
-    with {:ok, tags} <- Workflows.Tag.ensure_tags(tags),
+    with {:ok, tags} <- Workflow.Tag.ensure_tags(tags),
          filtered_tags <- unattached_tags(transaction_id, tags),
          {:ok, attached} <- attach_tags(transaction_id, filtered_tags),
      do: {:ok, attached}
@@ -46,8 +46,8 @@ defmodule BudgetApi.Workflow.Transaction do
   defp unattached_tags(transaction_id, tags) do
     tag_ids = Enum.map(tags, &(&1.id))
 
-    connections = Query.base
-    |> Query.Transaction.for_transaction_and_tags(transaction_id, tag_ids)
+    connections = Query.TransactionTag.base
+    |> Query.TransactionTag.for_transaction_and_tags(transaction_id, tag_ids)
     |> Repo.all
 
     attached_ids = Enum.map(connections, &(&1.tag_id))

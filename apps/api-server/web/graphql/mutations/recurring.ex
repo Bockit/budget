@@ -61,6 +61,15 @@ defmodule BudgetApi.GraphQL.Mutation.Recurring do
     |> Query.RecurringTag.for_recurring_and_tag_strings(recurring_id, tags)
     |> Repo.delete_all
 
-    Query.Recurring.by_id(recurring_id)
+    Repo.find(BudgetApi.Recurring, recurring_id)
+    |> BudgetApi.GraphQL.resolve
+  end
+
+  def delete do
+
+  end
+
+  def update do
+
   end
 end

@@ -53,4 +53,11 @@ defmodule BudgetApi.Workflow.Transaction do
     attached_ids = Enum.map(connections, &(&1.tag_id))
     Enum.filter(tags, &(!(&1.id in attached_ids)))
   end
+
+  def update(transaction_id, changes) do
+    with {:ok, transaction} <- Repo.find(Transaction, transaction_id),
+         changeset = Ecto.Changeset.change(transaction, changes),
+         {:ok, transaction} <- Repo.update(changeset),
+     do: {:ok, transaction}
+  end
 end

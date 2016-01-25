@@ -53,4 +53,11 @@ defmodule BudgetApi.Workflow.Recurring do
     attached_ids = Enum.map(connections, &(&1.tag_id))
     Enum.filter(tags, &(!(&1.id in attached_ids)))
   end
+
+  def update(recurring_id, changes) do
+    with {:ok, recurring} <- Repo.find(Recurring, recurring_id),
+         changeset = Ecto.Changeset.change(recurring, changes),
+         {:ok, recurring} <- Repo.update(changeset),
+     do: {:ok, recurring}
+  end
 end

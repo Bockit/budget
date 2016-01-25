@@ -64,4 +64,40 @@ defmodule BudgetApi.GraphQL.Mutation.Transaction do
     Repo.find(BudgetApi.Transaction, transaction_id)
     |> BudgetApi.GraphQL.resolve
   end
+
+  def delete do
+    %{
+      type: Type.Transaction.type,
+      args: %{
+        id: %{type: %ID{}},
+      },
+      resolve: {Mutation.Transaction, :delete_resolve}
+    }
+  end
+
+  def delete_resolve(_, %{id: transaction_id}, _) do
+    Repo.remove(BudgetApi.Transaction, transaction_id)
+    |> BudgetApi.GraphQL.resolve
+  end
+
+  def update do
+    %{
+      type: Type.Transaction.type,
+      args: %{
+        id: %{type: %ID{}},
+        frequency: %{type: %String{}},
+        amount: %{type: %Float{}},
+        description: %{type: %String{}},
+      },
+      resolve: {Mutation.Transaction, :update_resolve}
+    }
+  end
+
+  def update_resolve(_, %{id: transaction_id} = args, _) do
+    changes = Map.take(args, [:timestamp, :amount, :description, :audited])
+    Workflows.transaction(fn() ->
+      Workflow.Transaction.update(transaction_id, changes)
+    end)
+    |> BudgetApi.GraphQL.resolve
+  end
 end

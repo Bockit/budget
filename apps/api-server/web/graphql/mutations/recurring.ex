@@ -66,10 +66,38 @@ defmodule BudgetApi.GraphQL.Mutation.Recurring do
   end
 
   def delete do
+    %{
+      type: Type.Recurring.type,
+      args: %{
+        id: %{type: %ID{}},
+      },
+      resolve: {Mutation.Recurring, :delete_resolve}
+    }
+  end
 
+  def delete_resolve(_, %{id: recurring_id}, _) do
+    Repo.remove(BudgetApi.Recurring, recurring_id)
+    |> BudgetApi.GraphQL.resolve
   end
 
   def update do
+    %{
+      type: Type.Recurring.type,
+      args: %{
+        id: %{type: %ID{}},
+        frequency: %{type: %String{}},
+        amount: %{type: %Float{}},
+        description: %{type: %String{}},
+      },
+      resolve: {Mutation.Recurring, :update_resolve}
+    }
+  end
 
+  def update_resolve(_, %{id: recurring_id} = args, _) do
+    changes = Map.take(args, [:frequency, :amount, :description])
+    Workflows.transaction(fn() ->
+      Workflow.Recurring.update(recurring_id, changes)
+    end)
+    |> BudgetApi.GraphQL.resolve
   end
 end

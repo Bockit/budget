@@ -1,5 +1,5 @@
 defmodule BudgetApi.GraphQL.Type.Tag do
-  alias BudgetApi.Query
+  alias BudgetApi.{GraphQL, Query, Repo}
   alias BudgetApi.GraphQL.{Type, Helpers}
   alias GraphQL.Type.{ObjectType, List, ID, String}
 
@@ -25,10 +25,14 @@ defmodule BudgetApi.GraphQL.Type.Tag do
   def resolve_recurrings(%{id: id}, _, _) do
     Query.Recurring.base
     |> Query.Recurring.for_tag(id)
+    |> Repo.find_all
+    |> GraphQL.resolve
   end
 
   def resolve_transactions(%{id: id}, _, _) do
     Query.Transaction.base
     |> Query.Transaction.for_tag(id)
+    |> Repo.find_all
+    |> GraphQL.resolve
   end
 end

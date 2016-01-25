@@ -9,11 +9,4 @@ defmodule Workflows do
       end
     end)
   end
-
-  def graphql_resolving_transaction(function) do
-    case transaction(function) do
-      {:ok, result} -> result
-      {:error, _error} -> nil
-    end
-  end
 end

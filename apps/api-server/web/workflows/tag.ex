@@ -5,19 +5,17 @@ defmodule BudgetApi.Workflow.Tag do
   alias BudgetApi.Tag
 
   def create(tag) do
-    BudgetApi.Tag.changeset(%BudgetApi.Tag{}, %{
+    Tag.changeset(%Tag{}, %{
       tag: tag
     })
     |> Repo.insert
   end
 
   def ensure_tags(tags) do
-    current = find_tags(tags)
-    current_tags = Enum.map(current, &(&1.tag))
-
-    missing = Enum.filter(tags, &(!(&1 in current_tags)))
-
-    with {:ok, created} <- create_tags(missing),
+    with {:ok, current} <- find_tags(tags)
+         current_tags <- Enum.map(current, &(&1.tag))
+         missing <- Enum.filter(tags, &(!(&1 in current_tags)))
+         {:ok, created} <- create_tags(missing),
      do: {:ok, current ++ created}
   end
 
@@ -34,6 +32,6 @@ defmodule BudgetApi.Workflow.Tag do
     query = from t in Tag,
       where: t.tag in ^tags
 
-    Repo.all(query)
+    Repo.find_all(query)
   end
 end

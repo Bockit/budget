@@ -24,8 +24,8 @@ defmodule BudgetApi.Repo do
   end
 
   def remove_all(queryable, opts \\ []) do
-    case delete_all(queryable, id, opts \\ []) do
-      nil -> {:error, "RETURNING in DELETE not supported in this database"},
+    case delete_all(queryable, id, opts) do
+      nil -> {:error, "RETURNING in DELETE not supported in this database"}
       {count, models} -> {:ok, count, models}
     end
   end

@@ -1,96 +1,66 @@
 defmodule BudgetApi.GraphQL.Mutation.Transaction do
-  import Ecto.Query
-
-  alias BudgetApi.GraphQL.{Mutation, Type}
-  alias GraphQL.Type.{String, Float, List, ID}
+  alias BudgetApi.{Repo, Query, Workflow}
+  alias BudgetApi.GraphQL.{Mutation, Type, Helpers}
+  alias GraphQL.Type.{String, Float, ID}
 
   def create do
     %{
-      type: BudgetApi.GraphQL.Type.Transaction.type,
+      type: Type.Transaction.type,
       args: %{
         timestamp: %{type: %String{}},
         amount: %{type: %Float{}},
         description: %{type: %String{}},
-        tags: %{type: %List{ofType: %String{}}},
+        tags: Helpers.list(%String{}),
       },
-      resolve: {Mutation.Transaction, :resolve_create},
+      resolve: {Mutation.Transaction, :create_resolve},
     }
   end
 
-  def resolve_create(_, args, _) do
-    # result = BudgetApi.Repo.transaction(fn() ->
-    #   build_transaction(args.amount, args.timestamp, args.description, args.tags)
-    # end)
+  def create_resolve(_, args, _) do
+    %{amount: amount, frequency: frequency, description: description} = args
+    tags = args.tags || []
 
-    # case result do
-    #   {:ok, transaction} -> transaction
-    #   {:error, _error} -> nil
-    # end
+    Workflows.transaction(fn() ->
+      Workflow.Transaction.create_transaction_with_tags(amount, frequency, description, tags)
+    end)
+    |> BudgetApi.GraphQL.resolve
   end
 
-  def add_tag do
+  def add_tags do
     %{
       type: Type.Transaction.type,
       args: %{
         id: %{type: %ID{}},
-        tag: %{type: %String{}},
+        tags: Helpers.list(%String{}),
       },
-      resolve: {Mutation.Transaction, :resolve_add_tag}
+      resolve: {Mutation.Transaction, :add_tags_resolve}
     }
   end
 
-  def resolve_add_tag(_, args, _) do
-
+  def add_tags_resolve(_, %{id: transaction_id, tags: tags}, _) do
+    Workflows.transaction(fn() ->
+      with {:ok, _} <- Workflow.Transaction.add_tags(transaction_id, tags),
+       do: Repo.find(BudgetApi.Transaction, transaction_id)
+    end)
+    |> BudgetApi.GraphQL.resolve
   end
 
-  defp build_transaction(amount, timestamp, description, tags) do
-    transaction = create_transaction(amount, timestamp, description)
-    for tag <- ensure_tags(tags) do
-      create_transaction_tag(tag.id, transaction.id)
-    end
-    transaction
+  def remove_tags do
+    %{
+      type: Type.Transaction.type,
+      args: %{
+        id: %{type: %ID{}},
+        tags: Helpers.list(%String{}),
+      },
+      resolve: {Mutation.Transaction, :remove_tags_resolve}
+    }
   end
 
-  defp create_transaction(amount, timestamp, description) do
-    BudgetApi.Transaction.changeset(%BudgetApi.Transaction{}, %{
-      amount: amount,
-      timestamp: timestamp,
-      description: description,
-      audited: false,
-    })
-    |> BudgetApi.Repo.insert!
-  end
+  def remove_tags_resolve(_, %{id: transaction_id, tags: tags}, _) do
+    Query.TransactionTag.base
+    |> Query.TransactionTag.for_transaction_and_tag_strings(transaction_id, tags)
+    |> Repo.delete_all
 
-  defp create_tag(tag) do
-    BudgetApi.Tag.changeset(%BudgetApi.Tag{}, %{
-      tag: tag
-    })
-    |> BudgetApi.Repo.insert!
-  end
-
-  defp create_transaction_tag(tag_id, transaction_id) do
-    BudgetApi.TransactionTag.changeset(%BudgetApi.TransactionTag{}, %{
-      tag_id: tag_id,
-      transaction_id: transaction_id,
-    })
-    |> BudgetApi.Repo.insert!
-  end
-
-  defp ensure_tags(tags) do
-    current_tags = find_tags(tags)
-    current_tags_tags = Enum.map(current_tags, &(&1.tag))
-
-    missing_tags = Enum.filter(tags, &(!(&1 in current_tags_tags)))
-    created_tags = for tag <- missing_tags, do: create_tag(tag)
-
-    current_tags ++ created_tags
-  end
-
-  defp find_tags(tags) do
-    query = from t in BudgetApi.Tag,
-      where: t.tag in ^tags
-
-    query
-    |> BudgetApi.Repo.all
+    Query.Transaction.by_id(transaction_id)
   end
 end

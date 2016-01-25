@@ -1,5 +1,5 @@
 defmodule BudgetApi.GraphQL.Mutation.Recurring do
-  alias BudgetApi.{Repo, Query}
+  alias BudgetApi.{Repo, Query, Workflow}
   alias BudgetApi.GraphQL.{Mutation, Type, Helpers}
   alias GraphQL.Type.{String, Float, ID}
 
@@ -20,9 +20,10 @@ defmodule BudgetApi.GraphQL.Mutation.Recurring do
     %{amount: amount, frequency: frequency, description: description} = args
     tags = args.tags || []
 
-    Workflows.graphql_resolving_transaction(fn() ->
-      BudgetApi.Workflows.Recurring.create_recurring_with_tags(amount, frequency, description, tags)
+    Workflows.transaction(fn() ->
+      Workflow.Recurring.create_recurring_with_tags(amount, frequency, description, tags)
     end)
+    |> BudgetApi.GraphQL.resolve
   end
 
   def add_tags do
@@ -37,10 +38,11 @@ defmodule BudgetApi.GraphQL.Mutation.Recurring do
   end
 
   def add_tags_resolve(_, %{id: recurring_id, tags: tags}, _) do
-    Workflows.graphql_resolving_transaction(fn() ->
-      with {:ok, _} <- BudgetApi.Workflows.Recurring.add_tags(recurring_id, tags),
-       do: {:ok, Query.Recurring.by_id(recurring_id)}
+    Workflows.transaction(fn() ->
+      with {:ok, _} <- Workflow.Recurring.add_tags(recurring_id, tags),
+       do: Repo.find(BudgetApi.Recurring, recurring_id)
     end)
+    |> BudgetApi.GraphQL.resolve
   end
 
   def remove_tags do
@@ -55,8 +57,10 @@ defmodule BudgetApi.GraphQL.Mutation.Recurring do
   end
 
   def remove_tags_resolve(_, %{id: recurring_id, tags: tags}, _) do
-    Query.Recurring.relationship_for_recurring_and_tags(recurring_id, tags)
+    Query.RecurringTag.base
+    |> Query.RecurringTag.for_recurring_and_tag_strings(recurring_id, tags)
     |> Repo.delete_all
+
     Query.Recurring.by_id(recurring_id)
   end
 end

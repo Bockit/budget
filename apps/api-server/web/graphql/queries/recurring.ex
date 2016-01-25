@@ -10,7 +10,7 @@ defmodule BudgetApi.GraphQL.Query.Recurring do
   end
 
   def by_id_resolve(_, %{id: id}, _) do
-    with {:ok, recurring} <- Repo.find(id),
+    with {:ok, recurring} <- Repo.find(BudgetApi.Recurring, id),
      do: {:ok, recurring}
     |> GraphQL.resolve
   end

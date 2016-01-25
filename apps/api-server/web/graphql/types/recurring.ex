@@ -1,7 +1,7 @@
 defmodule BudgetApi.GraphQL.Type.Recurring do
+  alias GraphQL.Type.{ObjectType, List, ID, String, Float}
   alias BudgetApi.{Query, GraphQL, Repo}
   alias BudgetApi.GraphQL.{Type, Helpers}
-  alias GraphQL.Type.{ObjectType, List, ID, String, Float}
 
   def type do
     %ObjectType{

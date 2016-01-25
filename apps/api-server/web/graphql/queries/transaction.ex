@@ -10,7 +10,7 @@ defmodule BudgetApi.GraphQL.Query.Transaction do
   end
 
   def by_id_resolve(_, %{id: id}, _) do
-    with {:ok, transaction} <- Repo.find(id),
+    with {:ok, transaction} <- Repo.find(BudgetApi.Transaction, id),
      do: {:ok, transaction}
     |> GraphQL.resolve
   end

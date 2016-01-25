@@ -1,55 +1,53 @@
-defmodule BudgetApi.Workflow.Recurring do
-  import Ecto.Query
-
+defmodule BudgetApi.Workflow.Transaction do
   alias BudgetApi.{Repo, Workflows, Query}
-  alias BudgetApi.{Recurring, RecurringTag}
+  alias BudgetApi.{Transaction, TransactionTag}
 
-  def create(amount, frequency, description) do
-    Recurring.changeset(%Recurring{}, %{
+  def create(amount, timestamp, description) do
+    Transaction.changeset(%Transaction{}, %{
       amount: amount,
-      frequency: frequency,
+      timestamp: timestamp,
       description: description
     })
     |> Repo.insert
   end
 
-  def create_recurring_tag(recurring_id, tag_id) do
-    RecurringTag.changeset(%RecurringTag{}, %{
+  def create_transaction_tag(transaction_id, tag_id) do
+    TransactionTag.changeset(%TransactionTag{}, %{
       tag_id: tag_id,
-      recurring_id: recurring_id,
+      transaction_id: transaction_id,
     })
     |> Repo.insert
   end
 
-  def create_recurring_with_tags(amount, frequency, description, tags) do
+  def create_transaction_with_tags(amount, timestamp, description, tags) do
     with {:ok, tags} <- Workflows.Tag.ensure_tags(tags),
-         {:ok, recurring} <- create(amount, frequency, description),
-         {:ok, _recurring_tags} <- attach_tags(recurring.id, tags),
-         recurring <- Map.put(recurring, :tags, tags),
-     do: {:ok, recurring}
+         {:ok, transaction} <- create(amount, timestamp, description),
+         {:ok, _transaction_tags} <- attach_tags(transaction.id, tags),
+         transaction <- Map.put(transaction, :tags, tags),
+     do: {:ok, transaction}
   end
 
-  def attach_tags(recurring_id, tags), do: do_attach_tags(recurring_id, tags, [])
+  def attach_tags(transaction_id, tags), do: do_attach_tags(transaction_id, tags, [])
 
   defp do_attach_tags(_, [], attached), do: {:ok, attached}
-  defp do_attach_tags(recurring_id, [next|rest], attached) do
-    with {:ok, recurring_tag} <- create_recurring_tag(recurring_id, next.id),
-         {:ok, attached} <- do_attach_tags(recurring_id, rest, [recurring_tag|attached]),
+  defp do_attach_tags(transaction_id, [next|rest], attached) do
+    with {:ok, transaction_tag} <- create_transaction_tag(transaction_id, next.id),
+         {:ok, attached} <- do_attach_tags(transaction_id, rest, [transaction_tag|attached]),
      do: {:ok, attached}
   end
 
-  def add_tags(recurring_id, tags) do
+  def add_tags(transaction_id, tags) do
     with {:ok, tags} <- Workflows.Tag.ensure_tags(tags),
-         filtered_tags <- unattached_tags(recurring_id, tags),
-         {:ok, attached} <- attach_tags(recurring_id, filtered_tags),
+         filtered_tags <- unattached_tags(transaction_id, tags),
+         {:ok, attached} <- attach_tags(transaction_id, filtered_tags),
      do: {:ok, attached}
   end
 
-  defp unattached_tags(recurring_id, tags) do
+  defp unattached_tags(transaction_id, tags) do
     tag_ids = Enum.map(tags, &(&1.id))
 
     connections = Query.base
-    |> Query.Recurring.for_recurring_and_tags(recurring_id, tag_ids)
+    |> Query.Transaction.for_transaction_and_tags(transaction_id, tag_ids)
     |> Repo.all
 
     attached_ids = Enum.map(connections, &(&1.tag_id))

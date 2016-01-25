@@ -1,4 +1,4 @@
-defmodule BudgetApi.Graphql do
+defmodule BudgetApi.GraphQL do
   defmodule Helpers do
     alias GraphQL.Type.{ID, Int, List}
 

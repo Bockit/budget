@@ -1,7 +1,7 @@
 defmodule BudgetApi.GraphQL.Type.Transaction do
+  alias GraphQL.Type.{ObjectType, List, ID, String, Float, Boolean}
   alias BudgetApi.{Query, GraphQL, Repo}
   alias BudgetApi.GraphQL.{Type, Helpers}
-  alias GraphQL.Type.{ObjectType, List, ID, String, Float, Boolean}
 
   def type do
     %ObjectType{

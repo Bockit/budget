@@ -26,7 +26,7 @@ defmodule BudgetApi.Query.RecurringTag do
   def for_recurring_and_tags(query, recurring_id, tag_ids) do
     query
     |> by_recurring(recurring_id)
-    |> for_tags(tags_ids)
+    |> for_tags(tag_ids)
   end
 
   def for_recurring_and_tag_strings(query, recurring_id, tag_strings) do

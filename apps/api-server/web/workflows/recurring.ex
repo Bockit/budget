@@ -1,6 +1,4 @@
 defmodule BudgetApi.Workflow.Recurring do
-  import Ecto.Query
-
   alias BudgetApi.{Repo, Workflows, Query}
   alias BudgetApi.{Recurring, RecurringTag}
 

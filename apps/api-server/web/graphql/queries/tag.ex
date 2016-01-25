@@ -10,7 +10,7 @@ defmodule BudgetApi.GraphQL.Query.Tag do
   end
 
   def by_id_resolve(_, %{id: id}, _) do
-    with {:ok, tag} <- Repo.find(id),
+    with {:ok, tag} <- Repo.find(BudgetApi.Tag, id),
      do: {:ok, tag}
     |> GraphQL.resolve
   end

@@ -38,7 +38,7 @@ It provides the graphql endpoint `/api`. You can:
 http://127.0.0.1:4000/api?query={tags{tag}}
 ```
 
-**POST** with content-type application/graphql and body as follows:
+**POST** with the `Content-Type: application/graphql` header and body as follows:
 ```graphql
 query GetTags {
     tags {

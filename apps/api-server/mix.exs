@@ -39,8 +39,8 @@ defmodule BudgetApi.Mixfile do
       {:cowboy, "~> 1.0"},
       {:timex, "~> 1.0"},
       {:timex_ecto, "~> 0.7.0"},
-      {:graphql, github: "joshprice/graphql-elixir", override: true},
-      {:plug_graphql, github: "joshprice/plug_graphql"},
+      {:graphql, "~> 0.1.1"},
+      {:plug_graphql, "~> 0.1.4"},
     ]
   end
 

@@ -1,7 +1,9 @@
 defmodule BudgetApi.Router do
   use BudgetApi.Web, :router
+  import Plug.Parsers.GRAPHQL
 
   pipeline :api do
+    plug Plug.Parsers, parsers: [:graphql]
     plug :accepts, ["json"]
   end
 

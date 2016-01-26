@@ -1,127 +1,68 @@
-# BudgetApi
+Budget API
+==========
 
-To start your Phoenix app:
+This is the GraphQL API for the Budget webapp.
 
-  1. Install dependencies with `mix deps.get`
-  2. Create and migrate your database with `mix ecto.create && mix ecto.migrate`
-  3. Start Phoenix endpoint with `mix phoenix.server`
+Setup
+-----
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+1. If necessary, create a `dev.secret.exs` to overwrite database settings, etc.
+E.g.: 
+    ```elixir
+    use Mix.Config
 
-Ready to run in production? Please [check our deployment guides](http://www.phoenixframework.org/docs/deployment).
+    # Configure your database
+    config :budget_api, BudgetApi.Repo,
+      adapter: Ecto.Adapters.Postgres,
+      username: "james",
+      password: "",
+      database: "budget_api_dev",
+      hostname: "localhost",
+      pool_size: 20
+    ```
 
-## Learn more
+2. `mix deps.get` to install dependencies.
+3. `mix ecto.create` to create the dev database.
+4. `mix ecto.migrate` to run the migrations against the dev database.
+5. `mix run priv/repo/seeds.exs` to seed the dev database.
 
-  * Official website: http://www.phoenixframework.org/
-  * Guides: http://phoenixframework.org/docs/overview
-  * Docs: http://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix
+Usage
+-----
 
-Sample GraphQL Queries
-----------------------
+Run the server with `mix phoenix.server`. It should be running on port 4000.
 
-* real create transaction mutation
+It provides the graphql endpoint `/api`. You can:
 
+**GET**
+```
+http://127.0.0.1:4000/api?query={tags{tag}}
+```
+
+**POST** with content-type application/graphql and body as follows:
 ```graphql
-mutation CreateTransaction {
-    createTransaction(
-        timestamp: "2016-01-18T21:37:30Z"
-        amount: 50.0
-        description: "That was my grandfather's haunch."
-        tags: ["a","b","c"]
-    ) {
-        amount
-        id
-        description
-        timestamp
-        audited
-        tags {
-            tag
-        }
+query GetTags {
+    tags {
+        tag
     }
 }
 ```
 
------
+If you wish to run a mutation:
 
-* real get transaction by id query
-
-```graphql
-query TransactionById {
-    transaction(id: 21) {
-        amount
-        id
-        description
-        timestamp
-        audited
-        tags {
-            tag
-        }
-    }
-}
-```
-
------
-
-* real create recurring mutation
-
+**POST** with content-type application/graphql and body as follows:
 ```graphql
 mutation CreateRecurring {
     createRecurring(
+        amount: 51.2
+        description: "My first recurring transaction"
         frequency: "WEEKLY"
-        amount: 50.0
-        description: "That was my grandfather's haunch."
-        tags: ["a","b","c"]
+        tags: ["Utilities"]
     ) {
-        amount
         id
-        description
-        frequency
-        tags {
-            tag
-        }
     }
 }
 ```
 
------
+I recommend an addon such as Postman for running GraphQL queries and mutations.
 
-* multiple operations body
-
-```graphql
-mutation CreateRecurring {
-    createRecurring(
-        frequency: "WEEKLY"
-        amount: 50.0
-        description: "That was my grandfather's haunch."
-        tags: ["a","b","c"]
-    ) {
-        amount
-        id
-        description
-        frequency
-        tags {
-            tag
-        }
-    }
-}
-
-mutation CreateTransaction {
-    createTransaction(
-        timestamp: "2016-01-18T21:37:30Z"
-        amount: 50.0
-        description: "That was my grandfather's haunch."
-        tags: ["a","b","c"]
-    ) {
-        amount
-        id
-        description
-        timestamp
-        audited
-        tags {
-            tag
-        }
-    }
-}
-```
+In the future, you will be able to point Graphiql at `/api` and things should "just work".

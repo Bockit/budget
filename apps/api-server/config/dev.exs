@@ -35,8 +35,8 @@ config :phoenix, :stacktrace_depth, 20
 # Configure your database
 config :budget_api, BudgetApi.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "james",
-  password: "",
+  username: "postgres",
+  password: "postgres",
   database: "budget_api_dev",
   hostname: "localhost",
   pool_size: 10

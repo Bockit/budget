@@ -1,0 +1,37 @@
+{
+  "name": "@bockit/budget-app-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "autoprefixer": "^6.2.3",
+    "config": "^1.14.0",
+    "cson": "^3.0.1",
+    "css-modules-require-hook": "^2.0.1",
+    "express": "^4.13.1",
+    "jade": "^1.11.0",
+    "postcss": "^5.0.11",
+    "postcss-modules-extract-imports": "^1.0.0",
+    "postcss-modules-local-by-default": "^1.0.0",
+    "postcss-modules-scope": "^1.0.0",
+    "postcss-modules-values": "^1.1.1",
+    "postcss-nested": "^1.0.0",
+    "winston": "^1.0.1"
+  },
+  "devDependencies": {
+    "babel": "^5.8.29",
+    "babel-eslint": "^4.1.5",
+    "eslint": "^1.9.0",
+    "eslint-config-bockit": "^3.0.0",
+    "eslint-plugin-react": "^3.8.0",
+    "nodemon": "^1.4.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "nodemon -w . -w ../web -e js,cson,jade -i ../web/build -i node_modules index.js",
+    "start": "node index.js",
+    "lint": "eslint ."
+  },
+  "author": "James Hiscock <james@jameshiscock.com> (http://jameshiscock.com/)",
+  "license": "BSD-3-Clause"
+}

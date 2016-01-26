@@ -1,0 +1,11 @@
+server:
+    port: 3000
+    hostname: '0.0.0.0'
+
+logs:
+    level: 'warn'
+
+appSettings:
+    api: 'http://127.0.0.1:3030'
+    media: 'http://127.0.0.1:8080'
+    livereload: false

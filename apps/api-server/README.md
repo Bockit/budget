@@ -66,3 +66,21 @@ mutation CreateRecurring {
 I recommend an addon such as Postman for running GraphQL queries and mutations.
 
 In the future, you will be able to point Graphiql at `/api` and things should "just work".
+
+Structure
+---------
+
+- **/web**
+  - **/workflows** - Composable business logic
+  - **/queries** - Composable ecto queries
+  - **/graphql** - GraphQL schema specific stuff
+    - **/mutations** - The mutation fields for the GraphQL schema
+    - **/queries** - The query fields for the GraphQL schema
+    - **/types** - The custom Object types used across the GraphQL schema
+    - **/root_schema.ex** - Puts together the whole GraphQL schema
+
+- **/lib**
+  - **/workflows.ex** - Wraps workflows in transactions, rolling back if they return `{:error, error}`
+  - **/budget_api**
+    - **/graphql.ex** - Helper functions for building a GraphQL Schema and a DateTime type
+    - **/repo.ex** - Ecto.Repo and extra functions that return in the form `{:ok, result}` or `{:error, error}`

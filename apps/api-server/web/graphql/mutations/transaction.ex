@@ -1,13 +1,13 @@
 defmodule BudgetApi.GraphQL.Mutation.Transaction do
-  alias BudgetApi.{Repo, Query, Workflow}
-  alias BudgetApi.GraphQL.{Mutation, Type, Helpers}
   alias GraphQL.Type.{String, Float, ID}
+  alias BudgetApi.{Repo, Query, Workflow, GraphQL}
+  alias BudgetApi.GraphQL.{Mutation, Type, Helpers}
 
   def create do
     %{
       type: Type.Transaction.type,
       args: %{
-        timestamp: %{type: %String{}},
+        timestamp: %{type: %GraphQL.Type.DateTime{}},
         amount: %{type: %Float{}},
         description: %{type: %String{}},
         tags: Helpers.list(%String{}),
@@ -18,7 +18,7 @@ defmodule BudgetApi.GraphQL.Mutation.Transaction do
 
   def create_resolve(_, args, _) do
     %{amount: amount, timestamp: timestamp, description: description} = args
-    tags = args.tags || []
+    tags = Map.get(args, :tags, [])
 
     Workflows.transaction(fn() ->
       Workflow.Transaction.create_transaction_with_tags(amount, timestamp, description, tags)
@@ -85,7 +85,7 @@ defmodule BudgetApi.GraphQL.Mutation.Transaction do
       type: Type.Transaction.type,
       args: %{
         id: %{type: %ID{}},
-        frequency: %{type: %String{}},
+        timestamp: %{type: %GraphQL.Type.DateTime{}},
         amount: %{type: %Float{}},
         description: %{type: %String{}},
       },

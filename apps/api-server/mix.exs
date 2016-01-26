@@ -19,7 +19,7 @@ defmodule BudgetApi.Mixfile do
   def application do
     [mod: {BudgetApi, []},
      applications: [:phoenix, :phoenix_html, :cowboy, :logger,
-                    :phoenix_ecto, :postgrex, ]]
+                    :phoenix_ecto, :postgrex, :tzdata]]
   end
 
   # Specifies which paths to compile per environment.
@@ -31,12 +31,14 @@ defmodule BudgetApi.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.0.4"},
-      {:phoenix_ecto, "~> 1.1"},
-      {:postgrex, ">= 0.0.0"},
-      {:phoenix_html, "~> 2.1"},
+      {:phoenix, "~> 1.1"},
+      {:phoenix_ecto, "~> 2.0"},
+      {:postgrex, ">= 0.11.0"},
+      {:phoenix_html, "~> 2.3"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:cowboy, "~> 1.0"},
+      {:timex, "~> 1.0"},
+      {:timex_ecto, "~> 0.7.0"},
       {:graphql, github: "joshprice/graphql-elixir", override: true},
       {:plug_graphql, github: "joshprice/plug_graphql"},
     ]

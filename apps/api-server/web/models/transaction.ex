@@ -2,7 +2,7 @@ defmodule BudgetApi.Transaction do
   use BudgetApi.Web, :model
 
   schema "transactions" do
-    field :timestamp, Ecto.DateTime
+    field :timestamp, Timex.Ecto.DateTime
     field :amount, :float, default: 0.0
     field :description, :string
     field :audited, :boolean, default: false

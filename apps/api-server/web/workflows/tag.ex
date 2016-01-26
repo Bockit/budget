@@ -32,6 +32,6 @@ defmodule BudgetApi.Workflow.Tag do
     query = from t in Tag,
       where: t.tag in ^tags
 
-    Repo.find_all(query)
+    Repo.find_all(query, allow_empty: true)
   end
 end

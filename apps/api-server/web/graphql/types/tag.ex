@@ -1,5 +1,5 @@
 defmodule BudgetApi.GraphQL.Type.Tag do
-  alias GraphQL.Type.{ObjectType, List, ID, String}
+  alias GraphQL.Type.{ObjectType, ID, String}
   alias BudgetApi.{GraphQL, Query, Repo}
   alias BudgetApi.GraphQL.{Type, Helpers}
 

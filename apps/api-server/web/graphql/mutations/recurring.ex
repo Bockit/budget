@@ -1,7 +1,7 @@
 defmodule BudgetApi.GraphQL.Mutation.Recurring do
+  alias GraphQL.Type.{String, Float, ID}
   alias BudgetApi.{Repo, Query, Workflow}
   alias BudgetApi.GraphQL.{Mutation, Type, Helpers}
-  alias GraphQL.Type.{String, Float, ID}
 
   def create do
     %{
@@ -18,7 +18,7 @@ defmodule BudgetApi.GraphQL.Mutation.Recurring do
 
   def create_resolve(_, args, _) do
     %{amount: amount, frequency: frequency, description: description} = args
-    tags = args.tags || []
+    tags = Map.get(args, :tags, [])
 
     Workflows.transaction(fn() ->
       Workflow.Recurring.create_recurring_with_tags(amount, frequency, description, tags)

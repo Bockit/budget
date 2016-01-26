@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-class PostPage extends Component {
+class RecurringsPage extends Component {
 	render () {
 		return (
-			<b>Recurring</b>
+			<b>Recurrings</b>
 		)
 	}
 }
 
-export default connect()(PostPage)
+export default connect()(RecurringsPage)

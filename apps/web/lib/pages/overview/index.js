@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-class PostsPage extends Component {
+class OverviewPage extends Component {
 	render () {
 		return (
-			<b>Expenses</b>
+			<b>Overview</b>
 		)
 	}
 }
 
-export default connect()(PostsPage)
+export default connect()(OverviewPage)

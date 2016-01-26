@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import Recurring from '../../pages/recurring'
-import Expenses from '../../pages/expenses'
+import Overview from '../../pages/overview'
+import Recurrings from '../../pages/recurrings'
+import Transactions from '../../pages/transactions'
 import { connect } from 'react-redux'
 
-const PAGE_MAP = { Recurring, Expenses }
+const PAGE_MAP = { Overview, Recurrings, Transactions }
 
 class Root extends Component {
 	render () {

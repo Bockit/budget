@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
-import reducer from './lib/reducers/blog'
+import reducer from './lib/reducers/budget'
 import Router from './lib/modules/router'
 import Root from './lib/containers/root'
 

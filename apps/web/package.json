@@ -1,14 +1,14 @@
 {
-  "name": "@bockit/jameshiscock.com-webapp",
+  "name": "@bockit/budget-webapp",
   "version": "1.0.0",
-  "description": "Personal website.",
+  "description": "Personal budget.",
   "main": "index.js",
   "directories": {
     "test": "tests"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/bockit/jameshiscock.com.git"
+    "url": "git+ssh://git@github.com/bockit/budget.git"
   },
   "scripts": {
     "start": "gulp",
@@ -16,17 +16,15 @@
   },
   "keywords": [
     "app",
-    "james",
-    "hiscock",
-    "isomorphic",
-    "blog"
+    "budget",
+    "isomorphic"
   ],
   "author": "James Hiscock <james@jameshiscock.com> (http://jameshiscock.com/)",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/bockit/jameshiscock.com/issues"
+    "url": "https://github.com/bockit/budget/issues"
   },
-  "homepage": "https://jameshiscock.com",
+  "homepage": "https://github.com/bockit/budget",
   "dependencies": {
     "@bockit/simple-router": "^1.0.3",
     "immutable": "^3.7.5",
@@ -47,7 +45,6 @@
   "devDependencies": {
     "@bockit/bundle": "^2.0.1",
     "@smallmultiples/gulp-error-logger": "^1.0.0",
-    "@smallmultiples/livereload": "^1.0.0",
     "@smallmultiples/ncalls": "^1.0.0",
     "@smallmultiples/serve": "^1.0.1",
     "@smallmultiples/static": "^1.0.2",
@@ -55,6 +52,7 @@
     "autoprefixer": "^6.2.3",
     "babel-core": "^5.8.25",
     "babel-eslint": "^4.1.4",
+    "browserify-hmr": "^0.3.1",
     "config": "^1.16.0",
     "css-modules-loader-core": "^1.0.0",
     "css-modulesify": "^0.10.0",

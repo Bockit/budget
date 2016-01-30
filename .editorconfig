@@ -16,3 +16,7 @@ indent_size = 2
 
 [*.{jade,md}]
 trim_trailing_whitespace = false
+
+[*.{json,eslintrc,babelrc}]
+indent_style = tab
+indent_size = 2

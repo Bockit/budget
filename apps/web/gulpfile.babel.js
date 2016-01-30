@@ -40,7 +40,7 @@ if (isProduction) transforms.push('envify')
 const bundleSettings = {
 	error,
 	transforms,
-	onUpdate: () => {},
+	onUpdate: onUpdate,
 	buildNotifications: config.get('notifications.build'),
 	browserifyOptions: {
 		standalone: 'App',
@@ -112,4 +112,37 @@ function lint (done) {
 
 function watchJs () {
 	gulp.watch([ './index.js', './server.js', './lib/**/*.js' ], [ 'lint' ])
+}
+
+function onUpdate (filesChanged) {
+	if (hasCss(filesChanged)) triggerCss()
+	if (hasJs(filesChanged) && !hasHmr(filesChanged)) triggerAll()
+}
+
+function hasCss (files) {
+	for (var i = 0; i < files.length; i++) {
+		if (/\.css$/.test(files[i])) return true
+	}
+
+	return false
+}
+
+function hasJs (files) {
+	for (var i = 0; i < files.length; i++) {
+		if (/\.js$/.test(files[i])) return true
+	}
+
+	return false
+}
+
+function hasHmr (files) {
+	return false
+}
+
+function triggerCss () {
+	console.log('reload CSS')
+}
+
+function triggerAll () {
+	console.log('reload All')
 }

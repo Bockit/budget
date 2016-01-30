@@ -12,21 +12,18 @@ export default function App (settings, url, callback) {
 	const store = compose(middleware)(createStore)(reducer)
 
 	const router = new Router(store)
-	router.process(url, (err) => {
-		/* eslint no-console: 0 */
-		if (err) return console.error(err.stack)
+	router.process(url)
 
-		const content = renderToString(
-			<Provider store={store}>
-				<Root />
-			</Provider>
-		)
+	const content = renderToString(
+		<Provider store={store}>
+			<Root />
+		</Provider>
+	)
 
-		const initialState = store.getState()
-		for (const key in initialState) {
-			initialState[key] = initialState[key].toJS()
-		}
+	const initialState = store.getState()
+	for (const key in initialState) {
+		initialState[key] = initialState[key].toJS()
+	}
 
-		callback(null, { content, initialState })
-	})
+	callback(null, { content, initialState })
 }

@@ -3,8 +3,8 @@ import config from 'config'
 import logger from './lib/logger'
 import render from './lib/render'
 import logRequests from './lib/log-requests'
-import webapp from '@bockit/jameshiscock.com-webapp/server'
-import webappTemplate from '@bockit/jameshiscock.com-webapp/index.jade'
+import webapp from '@bockit/budget-webapp/server'
+import webappTemplate from '@bockit/budget-webapp/index.jade'
 
 const settings = config.get('appSettings')
 const port = config.get('server.port')

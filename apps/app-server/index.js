@@ -1,14 +1,9 @@
-require('babel/register')
+require('babel-register')({ ignore })
 const hook = require('css-modules-require-hook')
-const autoprefixer = require('autoprefixer')
 const nested = require('postcss-nested')
 
 hook({
 	prepend: [ nested ],
-	append: [ autoprefixer({
-		browsers: [ 'last 2 versions', 'IE >= 9' ],
-		remove: false,
-	}) ],
 })
 
 var jade = require('jade')
@@ -25,3 +20,22 @@ function compileTemplate (module, filename) {
 if (require.extensions) require.extensions['.jade'] = compileTemplate
 
 require('./server')
+
+function ignore (filename) {
+	var web = 'apps/web'
+	var webModules = web + '/node_modules'
+	var simpleRouter = webModules + '/@bockit/simple-router'
+	var simpleRouterModules = simpleRouter + '/node_modules'
+
+	web = new RegExp(web)
+	webModules = new RegExp(webModules)
+	simpleRouter = new RegExp(simpleRouter)
+	simpleRouterModules = new RegExp(simpleRouterModules)
+
+	if (simpleRouterModules.test(filename)) return true
+	if (simpleRouter.test(filename)) return false
+	if (webModules.test(filename)) return true
+	if (web.test(filename)) return false
+
+	return /node_modules\//.test(filename)
+}

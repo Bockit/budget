@@ -1,3 +1,5 @@
-.root {
-	background: blue;
+:global {
+	#root {
+		background: red;
+	}
 }

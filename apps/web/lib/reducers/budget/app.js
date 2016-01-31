@@ -2,7 +2,7 @@ import { Map, fromJS } from 'immutable'
 
 // Default to posts page
 const initialState = Map({
-	pageType: 'overview',
+	pageType: 'Overview',
 	pageProps: Map(),
 })
 

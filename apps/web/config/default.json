@@ -6,7 +6,8 @@
 
     "server": {
         "port": 8080,
-        "livereload": 35729
+        "livereload": 35729,
+        "hmr": 35829
     },
 
     "env": "development"

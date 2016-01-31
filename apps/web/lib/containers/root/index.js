@@ -9,6 +9,7 @@ const PAGE_MAP = { Overview, Recurrings, Transactions }
 class Root extends Component {
 	render () {
 		const Page = PAGE_MAP[this.props.pageType]
+
 		return <Page {...this.props.pageProps.toObject()} />
 	}
 }

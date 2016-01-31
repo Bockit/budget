@@ -10,11 +10,14 @@ import Router from './lib/modules/router'
 import Root from './lib/containers/root'
 // import { devTools, persistState } from 'redux-devtools'
 // import renderDevTools from './lib/modules/dev-tools-window'
+/* eslint no-unused-vars: 0 */
 import styles from './index.css'
 
 // const DEBUG_SESSION = /[?&]debug_session=([^&]+)\b/
 
-export default function App (settings, initialState) {
+module.exports = App
+
+function App (settings, initialState) {
 	for (const key in initialState) {
 		initialState[key] = fromJS(initialState[key])
 	}
@@ -37,11 +40,23 @@ export default function App (settings, initialState) {
 
 	render((
 		<Provider store={store}>
-			<Root className={styles.root} />
+			<Root />
 		</Provider>
-	), document.querySelector('.root'))
+	), document.getElementById('root'))
 
 	function makeUri (location) {
 		return location.pathname + location.search + location.hash
 	}
+}
+
+const { settings, initialState } = window.__budget
+delete window.__budget
+
+App(settings, initialState)
+
+if (process.env !== 'production' && module.hot) {
+	module.hot.unaccepted(() => setTimeout(() => {
+		window.location.reload()
+	}, 2000))
+	module.hot.decline()
 }

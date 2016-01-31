@@ -5,6 +5,8 @@ process.env.NODE_ENV = env
 import bundleFactory from '@bockit/bundle'
 import staticFactory from '@smallmultiples/static'
 import serveFactory from '@smallmultiples/serve'
+import livereloadFactory from '@smallmultiples/livereload'
+import triggerFactory from '@smallmultiples/livereload/trigger'
 import errorFactory from '@smallmultiples/gulp-error-logger'
 import stringBuilder from '@smallmultiples/string-builder'
 import ncalls from '@smallmultiples/ncalls'
@@ -21,11 +23,14 @@ import browserifyHmr from 'browserify-hmr'
 const isProduction = env === 'staging' || env === 'production'
 const error = errorFactory({ notifications: config.get('notifications.error') })
 const appPort = argv.port || argv.p || config.get('server.port')
+const hmrPort = argv.hmr || config.get('server.hmr')
 const lrPort = argv.livereload || argv.lr || config.get('server.livereload')
 const dest = stringBuilder('build/')
 
 const copyStatic = staticFactory({ error })
 const serve = serveFactory({ error })
+const reloadCss = triggerFactory({ port: lrPort }).bind(null, 'css')
+const startLr = livereloadFactory({ error })
 
 var postCss = [
 	nested,
@@ -40,7 +45,6 @@ if (isProduction) transforms.push('envify')
 const bundleSettings = {
 	error,
 	transforms,
-	onUpdate: onUpdate,
 	buildNotifications: config.get('notifications.build'),
 	browserifyOptions: {
 		standalone: 'App',
@@ -67,8 +71,8 @@ if (!isProduction) {
 		plugin: browserifyHmr,
 		opts: {
 			mode: 'websocket',
-			port: lrPort,
-			url: `http://127.0.0.1:${lrPort}`,
+			port: hmrPort,
+			url: `http://127.0.0.1:${hmrPort}`,
 		},
 	})
 }
@@ -93,10 +97,11 @@ gulp.task('default', [ 'lint', 'clean' ], () => {
 	bundle('index.js', dest(env), {
 		debug: !isProduction,
 		minify: isProduction,
-	})
+	}, () => watchCss())
 	copyStatic('static/**/*', dest(env), { base: './static' })
 
 	watchJs()
+	startLr()
 	serve(dest(env), { port: appPort })
 })
 
@@ -114,35 +119,6 @@ function watchJs () {
 	gulp.watch([ './index.js', './server.js', './lib/**/*.js' ], [ 'lint' ])
 }
 
-function onUpdate (filesChanged) {
-	if (hasCss(filesChanged)) triggerCss()
-	if (hasJs(filesChanged) && !hasHmr(filesChanged)) triggerAll()
-}
-
-function hasCss (files) {
-	for (var i = 0; i < files.length; i++) {
-		if (/\.css$/.test(files[i])) return true
-	}
-
-	return false
-}
-
-function hasJs (files) {
-	for (var i = 0; i < files.length; i++) {
-		if (/\.js$/.test(files[i])) return true
-	}
-
-	return false
-}
-
-function hasHmr (files) {
-	return false
-}
-
-function triggerCss () {
-	console.log('reload CSS')
-}
-
-function triggerAll () {
-	console.log('reload All')
+function watchCss () {
+	gulp.watch([ `${dest(env)}/index.css` ], reloadCss)
 }

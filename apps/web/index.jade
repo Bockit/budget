@@ -2,20 +2,25 @@
 
 doctype html
 html(lang='en')
-    head
-        meta(charset='UTF-8')
-        meta(name='description', content="James Hiscock's website")
-        meta(name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=1.0')
+  head
+    meta(charset='UTF-8')
+    meta(name='description', content="James Hiscock's website")
+    meta(name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=1.0')
 
-        title James Hiscock
+    title James Hiscock
 
-        link(rel='stylesheet', href=media('index.css'))
-        //- if (settings.livereload)
-            script(src=settings.livereload)
-    body
-        div.root!= content
+    link(rel='stylesheet', href=media('index.css'))
+    if (settings.livereload)
+      script(src=settings.livereload)
+    
+  body
+    div#root!= content
 
-        script(src='https://cdn.polyfill.io/v2/polyfill.js?features=setImmediate')
-        script(src=media('app.js'))
-        script.
-            App(!{JSON.stringify(settings)}, !{JSON.stringify(initialState)})
+    script(src='https://cdn.polyfill.io/v2/polyfill.js?features=setImmediate')
+    script.
+      window.__budget = {
+        settings: !{JSON.stringify(settings)},
+        initialState: !{JSON.stringify(initialState)},
+      }
+    
+    script(src=media('app.js'))

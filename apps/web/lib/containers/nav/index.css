@@ -12,3 +12,10 @@
 		background: rgba(255, 255, 255, 0.2);
 	}
 }
+
+.nav-buttons {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+}

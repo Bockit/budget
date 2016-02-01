@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import Nav from '../../components/nav'
+import Nav from '../../containers/nav'
+import CreateRecurringButton from '../../containers/create-recurring-button'
 
 class RecurringsPage extends Component {
 	render () {
 		return (
 			<header>
-				<Nav active="recurrings" />
-				<b>Recurring</b>
+				<Nav>
+					<CreateRecurringButton />
+				</Nav>
 			</header>
 		)
 	}

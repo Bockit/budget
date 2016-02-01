@@ -1,0 +1,12 @@
+.button {
+	display: inline-block;
+	height: 42px;
+	color: #fff;
+	border: none;
+	background: transparent;
+	outline: none;
+
+	&:hover {
+		background: rgba(255, 255, 255, 0.2);
+	}
+}

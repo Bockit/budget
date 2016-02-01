@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import Nav from '../../components/nav'
+import Nav from '../../containers/nav'
+import CreateTransactionButton from '../../containers/create-transaction-button'
 
 class OverviewPage extends Component {
 	render () {
 		return (
 			<header>
-				<Nav active="overview" />
-				<b>Overview</b>
+				<Nav>
+					<CreateTransactionButton />
+				</Nav>
 			</header>
 		)
 	}

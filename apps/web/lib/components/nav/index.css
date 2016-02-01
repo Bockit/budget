@@ -1,10 +1,14 @@
+.nav-bar {
+	background: #22b2a8;
+}
+
 .nav-link {
 	display: inline-block;
-	padding: 5px 0 5px 40px;
-	color: #808080;
+	padding: 12px 30px 12px 30px;
+	color: white;
 	text-decoration: none;
 
-	&.active {
-		color: #333;
+	&:global(.active) {
+		background: rgba(255, 255, 255, 0.2);
 	}
 }

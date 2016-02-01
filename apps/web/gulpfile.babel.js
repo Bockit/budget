@@ -40,6 +40,13 @@ var postCss = [
 	Core.scope,
 ]
 
+Core.scope.generateScopedName = (name, filename) => {
+	var sanitisedPath = filename.replace(/\.[^\.\/\\]+$/, '')
+		.replace(/[\W_]+/g, '_')
+		.replace(/^_|_$/g, '')
+	return `_web_${sanitisedPath}__${name}`
+}
+
 const transforms = [ 'babelify' ]
 if (isProduction) transforms.push('envify')
 const bundleSettings = {

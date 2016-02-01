@@ -1,10 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import Nav from '../../components/nav'
 
 class TransactionsPage extends Component {
 	render () {
 		return (
-			<b>Expenses</b>
+			<header>
+				<Nav active="transactions" />
+				<b>Transactions</b>
+			</header>
 		)
 	}
 }

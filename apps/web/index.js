@@ -8,14 +8,13 @@ import popState from 'popstate'
 import reducer from './lib/reducers/budget'
 import Router from './lib/modules/router'
 import Root from './lib/containers/root'
-// import { devTools, persistState } from 'redux-devtools'
+// import { devTools } from 'redux-devtools'
 // import renderDevTools from './lib/modules/dev-tools-window'
 /* eslint no-unused-vars: 0 */
 import styles from './index.css'
 
 // const DEBUG_SESSION = /[?&]debug_session=([^&]+)\b/
 
-module.exports = App
 
 function App (settings, initialState) {
 	for (const key in initialState) {
@@ -25,8 +24,6 @@ function App (settings, initialState) {
 	const middleware = [ applyMiddleware(thunk) ]
 	// if (process.env.NODE_ENV !== 'production') {
 	// 	middleware.push(devTools())
-	// 	const stateId = window.location.href.match(DEBUG_SESSION)
-	// 	middleware.push(persistState(stateId))
 	// }
 	const store = compose(...middleware)(createStore)(reducer, initialState)
 
@@ -49,9 +46,12 @@ function App (settings, initialState) {
 	}
 }
 
+// Workaround for babel exports.default not working with umd
+module.exports = App
+
+// Workaround for HMR breaking standalone
 const { settings, initialState } = window.__budget
 delete window.__budget
-
 App(settings, initialState)
 
 if (process.env !== 'production' && module.hot) {

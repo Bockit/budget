@@ -19,6 +19,7 @@ import Core from 'css-modules-loader-core'
 import nested from 'postcss-nested'
 import autoprefixer from 'autoprefixer'
 import browserifyHmr from 'browserify-hmr'
+import fs from 'fs'
 
 const isProduction = env === 'staging' || env === 'production'
 const error = errorFactory({ notifications: config.get('notifications.error') })
@@ -55,6 +56,7 @@ const bundleSettings = {
 	buildNotifications: config.get('notifications.build'),
 	browserifyOptions: {
 		standalone: 'App',
+		fullPaths: argv['full-paths'],
 	},
 	plugins: [
 		{
@@ -91,6 +93,7 @@ gulp.task('clean', (next) => rimraf(dest(env), next))
 // Build and exit
 gulp.task('build', [ 'lint', 'clean' ], (next) => {
 	next = ncalls(3, next)
+	fs.mkdirSync(dest(env))
 	bundle('index.js', dest(env), {
 		debug: !isProduction,
 		minify: isProduction,

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import Transaction from '../../components/modals/transaction'
-import Recurring from '../../components/modals/recurring'
+import Transaction from '../modals/transaction'
+import Recurring from '../modals/recurring'
 import { connect } from 'react-redux'
 import styles from './index.css'
 

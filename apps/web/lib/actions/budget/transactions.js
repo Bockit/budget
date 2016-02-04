@@ -5,3 +5,9 @@ export function showTransactionModal (transaction) {
 		data: transaction,
 	}
 }
+
+export function addTagToTransaction (tag) {
+	return {
+
+	}
+}

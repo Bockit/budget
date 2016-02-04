@@ -1,14 +1,14 @@
 {
-    "notifications": {
-        "build": true,
-        "error": true
-    },
+	"notifications": {
+		"build": true,
+		"error": true
+	},
 
-    "server": {
-        "port": 8080,
-        "livereload": 35729,
-        "hmr": 35829
-    },
+	"server": {
+		"port": 8080,
+		"livereload": 35729,
+		"hmr": 35829
+	},
 
-    "env": "development"
+	"env": "development"
 }

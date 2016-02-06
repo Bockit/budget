@@ -1,6 +1,6 @@
 import request from 'request'
 
-const uri = 'http://localhost:4200/api'
+const uri = 'http://localhost:4000/api'
 const headers = { 'Content-Type': 'application/graphql' }
 
 export default function graphQlRequest (body) {

@@ -24,7 +24,7 @@ require('./server')
 function ignore (filename) {
 	var web = 'apps/web'
 	var webModules = web + '/node_modules'
-	var simpleRouter = webModules + '/@bockit/simple-router'
+	var simpleRouter = '@bockit/simple-router'
 	var simpleRouterModules = simpleRouter + '/node_modules'
 
 	web = new RegExp(web)

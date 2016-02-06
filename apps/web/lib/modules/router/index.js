@@ -7,11 +7,11 @@ import {
 
 function handleAction (promise, callback) {
 	function success (...args) {
-		callback(null, ...args)
+		if (callback) callback(null, ...args)
 	}
 
 	function failure (err) {
-		callback(err)
+		if (callback) callback(err)
 	}
 
 	promise.then(success, failure)

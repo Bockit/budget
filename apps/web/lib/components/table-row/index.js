@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import styles from './index.css'
 
-export default class Table extends Component {
+export default class TableRow extends Component {
 	render () {
 		const cells = cells.map(({ type, value }) => {
 			return <TableCell type={type}>{value}</TableCell>

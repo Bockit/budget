@@ -3,12 +3,7 @@ import styles from './index.css'
 
 export default class Table extends Component {
 	render () {
-		const headings = this.props.columns.map((column) => {
-			const cellStyle = styles[`table-heading-${column}`] || ''
-			const className = `${styles['table-heading']} ${cellStyle}`.trim()
-			return <th className={className}>{column}</th>
-		})
-
+		const headings = this.renderHeadings()
 		const tableStyle = styles[`table-${this.props.type}`] || ''
 		const className = `${styles.table} ${tableStyle}`.trim()
 
@@ -18,5 +13,13 @@ export default class Table extends Component {
 				<tbody>{this.props.children}</tbody>
 			</table>
 		)
+	}
+
+	renderHeadings () {
+		return this.props.columns.map((column) => {
+			const cellStyle = styles[`table-heading-${column}`] || ''
+			const className = `${styles['table-heading']} ${cellStyle}`.trim()
+			return <th className={className}>{column}</th>
+		})
 	}
 }

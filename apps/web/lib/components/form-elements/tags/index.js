@@ -73,6 +73,7 @@ export class AddTagButton extends Component {
 				className={styles['add-tag-button']}
 				type="button"
 				onClick={this.onClick.bind(this)}>
+				onChange={this.onChange.bind(this)}
 				New Tag
 			</button>
 		)
@@ -96,11 +97,13 @@ export class AddTagButton extends Component {
 
 	onKeyDown (ev) {
 		if (ev.keyCode === ENTER) {
+			ev.preventDefault()
 			this.createTag()
 		}
-		else {
-			this.setState({ value: this.refs.input.value.trim() })
-		}
+	}
+
+	onChange () {
+		this.setState({ value: this.refs.input.value.trim() })
 	}
 
 	onBlur () {

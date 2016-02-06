@@ -1,3 +1,4 @@
+import * as loading from './loading'
 import * as mutations from '../../modules/graphql/mutations'
 import * as queries from '../../modules/graphql/queries'
 
@@ -9,38 +10,15 @@ export function showTransactionModal (transaction) {
 	}
 }
 
-export function startLoading (operation, props) {
-	return {
-		type: 'TRANSACTION:LOADING:START',
-		operation,
-		...props,
-	}
-}
-
-export function stopLoading (operation, props) {
-	return {
-		type: 'TRANSACTION:LOADING:STOP',
-		operation,
-		...props,
-	}
-}
-
-export function errorLoading (operation, error, props) {
-	return {
-		type: 'TRANSACTION:LOADING:ERROR',
-		operation,
-		error,
-		...props,
-	}
-}
-
 function doAsyncSingle (fn, { id, dispatch, success }) {
-	dispatch(startLoading('single', { id }))
+	dispatch(loading.start('TRANSACTION', 'single', { id }))
 
 	return fn()
 		.then(success)
-		.then(() => dispatch(stopLoading('single', { id })))
-		.then(null, (error) => dispatch(errorLoading('single', { id, error })))
+		.then(() => dispatch(loading.stop('TRANSACTION', 'single', { id })))
+		.then(null, (error) => {
+			dispatch(loading.error('TRANSACTION', 'single', { id, error }))
+		})
 }
 
 export function addTagToTransaction (id, tag) {
@@ -111,13 +89,16 @@ export function loadTransactions (offset, limit) {
 			})
 		}
 
-		dispatch(startLoading('range', { offset, limit }))
+		dispatch(loading.start('TRANSACTION', 'range', { offset, limit }))
 
 		return queries.getTransactions(offset, limit)
 			.then(success)
-			.then(() => dispatch(stopLoading('range', { offset, limit })))
+			.then(() => {
+				dispatch(loading.stop('TRANSACTION', 'range', { offset, limit }))
+			})
 			.then(null, (error) => {
-				dispatch(errorLoading('range', { offset, range, error }))
+				const props = { offset, range }
+				dispatch(loading.error('TRANSACTION', 'range', error, props))
 			})
 	}
 }

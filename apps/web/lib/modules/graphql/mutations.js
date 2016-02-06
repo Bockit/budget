@@ -1,4 +1,4 @@
-import request from '../request'
+import request from './request'
 import { string, list, boolean } from './serialise-argument'
 
 export function createRecurring (recurring) {

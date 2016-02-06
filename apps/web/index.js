@@ -26,6 +26,7 @@ function App (settings, initialState) {
 	// 	middleware.push(devTools())
 	// }
 	const store = compose(...middleware)(createStore)(reducer, initialState)
+	window._store = store
 
 	const router = new Router(store)
 	popState((event) => {

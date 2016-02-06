@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import styles from './index.css'
-import Text from '../../form-elements/text'
-import Amount from '../../form-elements/amount'
-import Checkbox from '../../form-elements/checkbox'
-import Tags from '../../form-elements/checkbox'
+import Text from '../../../components/form-elements/text'
+import Amount from '../../../components/form-elements/amount'
+import Checkbox from '../../../components/form-elements/checkbox'
+import Tags from '../../../components/form-elements/checkbox'
 
 import {
 	createLocalTag,

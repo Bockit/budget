@@ -1,4 +1,4 @@
-import request from '../request'
+import request from './request'
 import { int } from './serialise-argument'
 
 export function allTags () {

@@ -41,6 +41,7 @@ defmodule BudgetApi.Mixfile do
       {:timex_ecto, "~> 0.7.0"},
       {:graphql, "~> 0.1.1"},
       {:plug_graphql, "~> 0.1.4"},
+      {:corsica, "~> 0.4"},
     ]
   end
 

@@ -3,9 +3,25 @@ import styles from './index.css'
 
 export default class TableRow extends Component {
 	render () {
-		const cells = cells.map(({ type, value }) => {
-			return <TableCell type={type}>{value}</TableCell>
+		const cells = this.props.columns.map((column) => {
+			let value = this.props.entry.get(column)
+
+			if (column === 'tags') {
+				value = value.map((tag) => tag.get('tag')).join(', ')
+			}
+
+			return (
+				<TableCell
+					key={column}
+					type={this.props.type}>
+					{value}
+				</TableCell>
+			)
 		})
+
+		// { type, value }) => {
+		// 	list.push(<TableCell type={type}>{value}</TableCell>)
+		// }, [])
 
 		return <tr>{cells}</tr>
 	}

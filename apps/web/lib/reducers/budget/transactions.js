@@ -13,6 +13,7 @@ export default function transactionReducer (state = initialState, action) {
 }
 
 export function addTransactions (state, action) {
+	console.log('addTransactions')
 	const incoming = fromJS(action.transactions)
 	return state.concat(incoming)
 }

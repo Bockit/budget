@@ -8,7 +8,7 @@ const initialState = Map({
 
 const handlers = {
 	'TAGS:LOAD': loadTags,
-	'TAGS:ADD': addTag,
+	'TAGS:ADD': addTags,
 }
 
 export default function modalReducer (state = initialState, action) {

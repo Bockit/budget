@@ -19,7 +19,7 @@ export default class Table extends Component {
 		return this.props.columns.map((column) => {
 			const cellStyle = styles[`table-heading-${column}`] || ''
 			const className = `${styles['table-heading']} ${cellStyle}`.trim()
-			return <th className={className}>{column}</th>
+			return <th key={column} className={className}>{column}</th>
 		})
 	}
 }

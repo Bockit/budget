@@ -5,6 +5,7 @@ defmodule BudgetApi.Router do
   pipeline :api do
     plug Plug.Parsers, parsers: [:graphql]
     plug :accepts, ["json"]
+    plug Corsica, origins: "*"
   end
 
   # Other scopes may use custom stacks.

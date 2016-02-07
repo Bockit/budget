@@ -104,6 +104,7 @@ gulp.task('build', [ 'lint', 'clean' ], (next) => {
 
 // Build and start watching for changes
 gulp.task('default', [ 'lint', 'clean' ], () => {
+	fs.mkdirSync(dest(env))
 	bundle('index.js', dest(env), {
 		debug: !isProduction,
 		minify: isProduction,

@@ -81,7 +81,9 @@ export function createTransaction (transaction) {
 export function loadTransactions (offset, limit) {
 	return (dispatch) => {
 		function success ({ transactions }) {
-			console.log(transactions)
+			transactions.forEach((transaction) => {
+				transaction.tags = transaction.tags.map((tag) => tag.tag)
+			})
 			dispatch({
 				type: 'TRANSACTION:ADD',
 				transactions,
@@ -98,7 +100,6 @@ export function loadTransactions (offset, limit) {
 				dispatch(loading.stop('TRANSACTION', 'range', { offset, limit }))
 			})
 			.then(null, (error) => {
-				console.log('shit', error)
 				const props = { offset, range }
 				dispatch(loading.error('TRANSACTION', 'range', error, props))
 			})

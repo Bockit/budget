@@ -7,7 +7,7 @@ export default class TableRow extends Component {
 			let value = this.props.entry.get(column)
 
 			if (column === 'tags') {
-				value = value.map((tag) => tag.get('tag')).join(', ')
+				value = value.join(', ')
 			}
 
 			return (
@@ -18,10 +18,6 @@ export default class TableRow extends Component {
 				</TableCell>
 			)
 		})
-
-		// { type, value }) => {
-		// 	list.push(<TableCell type={type}>{value}</TableCell>)
-		// }, [])
 
 		return <tr>{cells}</tr>
 	}

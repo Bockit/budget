@@ -27,6 +27,7 @@
   "homepage": "https://github.com/bockit/budget",
   "dependencies": {
     "@bockit/simple-router": "^1.1.0",
+    "babel-core": "^6.5.1",
     "immutable": "^3.7.5",
     "popstate": "^1.0.0",
     "react": "^0.14.6",

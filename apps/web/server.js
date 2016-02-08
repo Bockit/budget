@@ -12,18 +12,20 @@ export default function App (settings, url, callback) {
 	const store = compose(middleware)(createStore)(reducer)
 
 	const router = new Router(store)
-	router.process(url)
+	router.process(url, (err) => {
+		if (err) return callback(err)
 
-	const content = renderToString(
-		<Provider store={store}>
-			<Root />
-		</Provider>
-	)
+		const content = renderToString(
+			<Provider store={store}>
+				<Root />
+			</Provider>
+		)
 
-	const initialState = store.getState()
-	for (const key in initialState) {
-		initialState[key] = initialState[key].toJS()
-	}
+		const initialState = store.getState()
+		for (const key in initialState) {
+			initialState[key] = initialState[key].toJS()
+		}
 
-	callback(null, { content, initialState })
+		callback(null, { content, initialState })
+	})
 }

@@ -1,6 +1,5 @@
 import { env as argv } from 'gulp-util'
-const env = argv.env || argv.e || 'development'
-process.env.NODE_ENV = env
+const env = process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 
 import bundleFactory from '@bockit/bundle'
 import staticFactory from '@smallmultiples/static'

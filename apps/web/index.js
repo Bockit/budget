@@ -32,7 +32,7 @@ function App (settings, initialState) {
 	popState((event) => {
 		if (router.process(makeUri(window.location))) event.preventDefault()
 	})
-	router.process(makeUri(window.location))
+	// router.process(makeUri(window.location))
 
 	// if (process.env.NODE_ENV !== 'production') renderDevTools(store)
 

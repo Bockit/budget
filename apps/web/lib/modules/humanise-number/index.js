@@ -21,5 +21,7 @@ function humanise (number, decimals = 2, decPoint = '.', thousandsSep = ',') {
 	const intPart = `${+(number.toFixed(decimals))}`
 	const j = intPart.length > 3 ? intPart.length % 3 : 0
 
-	return sign + (j ? intPart.substr(0, j) + thousandsSep : '') + intPart.substr(j).replace(/(\d{3})(?=\d)/g, `$1${thousandsSep}`) + (decimals ? decPoint + Math.abs(number - intPart).toFixed(decimals).slice(2) : '')
+  const first = j ? intPart.substr(0, j) + thousandsSep : ''
+
+	return sign + first + intPart.substr(j).replace(/(\d{3})(?=\d)/g, `$1${thousandsSep}`) + (decimals ? decPoint + Math.abs(number - intPart).toFixed(decimals).slice(2) : '')
 }

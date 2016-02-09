@@ -14,6 +14,7 @@ logger.info('Creating app')
 const app = express()
 
 app.use(logRequests({ logger: logger.info.bind(logger) }))
+app.use(express.static('static'))
 app.get('*', render(webappTemplate, webapp, settings))
 
 logger.info('Starting server')

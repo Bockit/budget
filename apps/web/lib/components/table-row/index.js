@@ -1,19 +1,20 @@
 import React, { Component } from 'react'
 import styles from './index.css'
+import capitalise from '../../modules/capitalise'
+import humanise from '../../modules/humanise-number'
 
 export default class TableRow extends Component {
 	render () {
 		const cells = this.props.columns.map((column) => {
 			let value = this.props.entry.get(column)
 
-			if (column === 'tags') {
-				value = value.join(', ')
-			}
+			const method = `format${capitalise(column)}`
+			if (method) value = this[method](value)
 
 			return (
 				<TableCell
 					key={column}
-					type={this.props.type}>
+					column={column}>
 					{value}
 				</TableCell>
 			)
@@ -21,11 +22,19 @@ export default class TableRow extends Component {
 
 		return <tr>{cells}</tr>
 	}
+
+	castTags (tags) {
+		return tags.join(', ')
+	}
+
+	castAmount (amount) {
+		return humanise(amount)
+	}
 }
 
 class TableCell extends Component {
 	render () {
-		const cellStyle = styles[`table-row-cell-${this.props.type}`] || ''
+		const cellStyle = styles[`table-row-cell-${this.props.column}`] || ''
 		const className = `${styles['table-row-cell']} ${cellStyle}`.trim()
 		return <td className={className}>{this.props.children}</td>
 	}

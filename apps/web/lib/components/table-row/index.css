@@ -1,3 +1,9 @@
 .table-row-cell {
 	padding: 5px;
 }
+
+.table-row-cell-amount {
+	&:before {
+		content: '$';
+	}
+}

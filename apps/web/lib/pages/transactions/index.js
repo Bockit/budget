@@ -29,7 +29,6 @@ class TransactionsPage extends Component {
 			return (
 				<TableRow
 					key={transaction.get('id')}
-					type="transaction"
 					columns={COLUMNS}
 					entry={transaction} />
 			)

@@ -32,15 +32,24 @@ function App (settings, initialState) {
 	popState((event) => {
 		if (router.process(makeUri(window.location))) event.preventDefault()
 	})
-	// router.process(makeUri(window.location))
 
 	// if (process.env.NODE_ENV !== 'production') renderDevTools(store)
+
+	if (process.env.NODE_ENV !== 'production') {
+		var Perf = require('react-addons-perf')
+		Perf.start()
+	}
 
 	render((
 		<Provider store={store}>
 			<Root />
 		</Provider>
 	), document.getElementById('root'))
+
+	if (process.env.NODE_ENV !== 'production') {
+		Perf.stop()
+		window.Perf = Perf
+	}
 
 	function makeUri (location) {
 		return location.pathname + location.search + location.hash

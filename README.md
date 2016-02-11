@@ -14,3 +14,6 @@ This repository contains 3 different apps that combine together for the whole th
 [elixir server]: https://github.com/Bockit/budget/tree/master/apps/api-server
 [web app]: https://github.com/Bockit/budget/tree/master/apps/web
 [node server]: https://github.com/Bockit/budget/tree/master/apps/app-server
+
+Instructions
+=============

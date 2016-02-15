@@ -21,7 +21,13 @@ function humanise (number, decimals = 2, decPoint = '.', thousandsSep = ',') {
 	const intPart = `${+(number.toFixed(decimals))}`
 	const j = intPart.length > 3 ? intPart.length % 3 : 0
 
-  const first = j ? intPart.substr(0, j) + thousandsSep : ''
+	const firstGroup = j ? intPart.substr(0, j) + thousandsSep : ''
+	const rest = intPart.substr(j)
+	const groupsOfThree = rest.replace(/(\d{3})(?=\d)/g, `$1${thousandsSep}`)
 
-	return sign + first + intPart.substr(j).replace(/(\d{3})(?=\d)/g, `$1${thousandsSep}`) + (decimals ? decPoint + Math.abs(number - intPart).toFixed(decimals).slice(2) : '')
+	const decimalDigits = Math.abs(number - intPart).toFixed(decimals).slice(2)
+
+	const trailing = decimals ? `${decPoint}${decimalDigits}` : ''
+
+	return `${sign}${firstGroup}${groupsOfThree}${trailing}`
 }

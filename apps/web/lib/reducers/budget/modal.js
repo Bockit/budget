@@ -21,7 +21,7 @@ export function showModal (state, action) {
 		.set('data', fromJS(action.data || {}))
 }
 
-export function hideModal () {
+export function hideModal (state) {
 	return state
 		.set('modal', null)
 		.delete('data')

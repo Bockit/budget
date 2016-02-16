@@ -13,10 +13,14 @@ class ModalRoot extends Component {
 
 		const Modal = MODAL_MAP[this.props.modal]
 		return (
-			<div className={styles['modal-root']}>
+			<div className={styles['modal-root']} onClick={this.onClick.bind(this)}>
 				<Modal {...this.props.data.toObject()} />
 			</div>
 		)
+	}
+
+	onClick (ev) {
+		ev.keepModal = true
 	}
 }
 

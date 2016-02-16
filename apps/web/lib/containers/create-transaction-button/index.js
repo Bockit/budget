@@ -1,12 +1,16 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { showTransactionModal } from '../../actions/budget/transactions'
+import { showTransactionModal } from '../../actions/budget/modals'
 import Button from '../../components/button'
 
 class CreateTransactionButton extends Component {
 	render () {
-		const onClick = this.props.dispatch.bind(null, showTransactionModal())
-		return <Button onClick={onClick}>New Transaction</Button>
+		return <Button onClick={this.onClick.bind(this)}>New Transaction</Button>
+	}
+
+	onClick (ev) {
+		ev.keepModal = true
+		this.props.dispatch(showTransactionModal())
 	}
 }
 

@@ -50,8 +50,9 @@ export default class Tags extends Component {
 
 export class AddTagButton extends Component {
 	/* eslint react/no-set-state: 0 */
-	getInitialState () {
-		return {
+	constructor (props) {
+		super(props)
+		this.state = {
 			value: '',
 			editing: false,
 		}

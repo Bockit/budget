@@ -5,7 +5,9 @@ import styles from './index.css'
 class RecurringModal extends Component {
 	render () {
 		return (
-			<span className={styles['recurring-modal']}>Recurring Modal</span>
+			<span className={styles['recurring-modal']}>
+				Recurring Modal
+			</span>
 		)
 	}
 }

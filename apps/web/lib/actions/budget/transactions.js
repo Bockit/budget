@@ -2,14 +2,6 @@ import * as loading from './loading'
 import * as mutations from '../../modules/graphql/mutations'
 import * as queries from '../../modules/graphql/queries'
 
-export function showTransactionModal (transaction) {
-	return {
-		type: 'MODAL:SHOW',
-		modal: 'Transaction',
-		data: transaction,
-	}
-}
-
 function doAsyncSingle (fn, { id, dispatch, success }) {
 	dispatch(loading.start('TRANSACTION', 'single', { id }))
 

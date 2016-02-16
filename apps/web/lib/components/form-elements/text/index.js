@@ -3,9 +3,10 @@ import styles from './index.css'
 
 export default class Text extends Component {
 	/* eslint react/no-set-state: 0 */
-	getInitialState () {
-		return {
-			value: this.props.initialValue,
+	constructor (props) {
+		super(props)
+		this.state = {
+			value: props.initialValue,
 		}
 	}
 

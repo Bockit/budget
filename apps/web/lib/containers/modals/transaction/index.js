@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import styles from './index.css'
+import Form from '../../../components/form'
 import Text from '../../../components/form-elements/text'
 import Amount from '../../../components/form-elements/amount'
 import Checkbox from '../../../components/form-elements/checkbox'
@@ -20,35 +21,37 @@ class TransactionModal extends Component {
 	render () {
 		return (
 			<div className={styles['transaction-modal']}>
-				<Text
-					initialValue={this.props.description}
-					onCommit={this.update.bind(this, 'description')}>
+				<Form>
+					<Text
+						initialValue={this.props.description}
+						onCommit={this.update.bind(this, 'description')}>
 
-					Description
-				</Text>
+						Description
+					</Text>
 
-				<Amount
-					initialValue={this.props.amount}
-					onCommit={this.update.bind(this, 'amount')}>
+					<Amount
+						initialValue={this.props.amount}
+						onCommit={this.update.bind(this, 'amount')}>
 
-					Amount
-				</Amount>
+						Amount
+					</Amount>
 
-				<Tags
-					initialValue={this.props.tags}
-					tags={this.props.availableTags}
-					loading={this.props.tagsLoading}
-					onAddTag={this.addTag.bind(this)}
-					onRemoveTag={this.removeTag.bind(this)}>
+					<Tags
+						initialValue={this.props.tags}
+						tags={this.props.availableTags}
+						loading={this.props.tagsLoading}
+						onAddTag={this.addTag.bind(this)}
+						onRemoveTag={this.removeTag.bind(this)}>
 
-					Tags
-				</Tags>
+						Tags
+					</Tags>
 
-				<Checkbox
-					initialValue={this.props.audited}
-					onCommit={this.update.bind(this, 'audited')}>
-					Audited
-				</Checkbox>
+					<Checkbox
+						initialValue={this.props.audited}
+						onCommit={this.update.bind(this, 'audited')}>
+						Audited
+					</Checkbox>
+				</Form>
 			</div>
 		)
 	}

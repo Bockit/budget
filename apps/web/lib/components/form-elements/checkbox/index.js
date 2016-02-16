@@ -3,9 +3,10 @@ import styles from './index.css'
 
 export default class Checkbox extends Component {
 	/* eslint react/no-set-state: 0 */
-	getInitialState () {
-		return {
-			value: this.props.initialValue,
+	constructor (props) {
+		super(props)
+		this.state = {
+			value: props.initialValue,
 		}
 	}
 
@@ -17,7 +18,7 @@ export default class Checkbox extends Component {
 					ref="input"
 					type="checkbox"
 					checked={this.state.value}
-					onChange={this.props.onChange.bind(this)} />
+					onChange={this.onChange.bind(this)} />
 			</label>
 		)
 	}

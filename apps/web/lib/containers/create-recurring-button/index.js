@@ -1,12 +1,16 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { showRecurringModal } from '../../actions/budget/recurrings'
+import { showRecurringModal } from '../../actions/budget/modals'
 import Button from '../../components/button'
 
 class CreateRecurringButton extends Component {
 	render () {
-		const onClick = this.props.dispatch.bind(null, showRecurringModal())
-		return <Button onClick={onClick}>New Recurring</Button>
+		return <Button onClick={this.onClick.bind(this)}>New Recurring</Button>
+	}
+
+	onClick (ev) {
+		ev.keepModal = true
+		this.props.dispatch(showRecurringModal())
 	}
 }
 

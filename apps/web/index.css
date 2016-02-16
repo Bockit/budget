@@ -1,4 +1,8 @@
 :global {
+	html, body, #root, #root > main {
+		height: 100%;
+	}
+
 	*, *:before, *:after {
 		box-sizing: border-box;
 	}

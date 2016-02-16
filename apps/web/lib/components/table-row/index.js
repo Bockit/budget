@@ -9,7 +9,7 @@ export default class TableRow extends Component {
 			let value = this.props.entry.get(column)
 
 			const method = `format${capitalise(column)}`
-			if (method) value = this[method](value)
+			if (this[method]) value = this[method](value)
 
 			return (
 				<TableCell
@@ -23,11 +23,11 @@ export default class TableRow extends Component {
 		return <tr>{cells}</tr>
 	}
 
-	castTags (tags) {
+	formatTags (tags) {
 		return tags.join(', ')
 	}
 
-	castAmount (amount) {
+	formatAmount (amount) {
 		return humanise(amount)
 	}
 }

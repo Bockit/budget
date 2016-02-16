@@ -15,10 +15,10 @@ function humanise (number, decimals = 2, decPoint = '.', thousandsSep = ',') {
 	decPoint = (decPoint === undefined) ? '.' : decPoint
 	thousandsSep = (thousandsSep === undefined) ? ',' : thousandsSep
 
-	var sign = number < 0 ? '-' : ''
+	var sign = number < 0 ? ' - ' : ' + '
 	number = Math.abs(+number || 0)
 
-	const intPart = `${+(number.toFixed(decimals))}`
+	const intPart = `${+(Math.floor(number))}`
 	const j = intPart.length > 3 ? intPart.length % 3 : 0
 
 	const firstGroup = j ? intPart.substr(0, j) + thousandsSep : ''

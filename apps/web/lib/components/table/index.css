@@ -16,4 +16,9 @@
 .table-heading {
 	color: #999;
 	text-transform: uppercase;
+	text-align: right;
+}
+
+.table-heading-Description {
+	text-align: left;
 }

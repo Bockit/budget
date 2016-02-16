@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import styles from './index.css'
 import capitalise from '../../modules/capitalise'
 import humanise from '../../modules/humanise-number'
+import dateformat from 'dateformat'
 
 export default class TableRow extends Component {
 	render () {
@@ -29,6 +30,10 @@ export default class TableRow extends Component {
 
 	formatAmount (amount) {
 		return humanise(amount)
+	}
+
+	formatTimestamp (timestamp) {
+		return dateformat(timestamp, 'mmm d h:MM tt')
 	}
 }
 

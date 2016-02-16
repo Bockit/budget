@@ -1,5 +1,10 @@
 .table-row-cell {
 	padding: 5px;
+	text-align: right;
+}
+
+.table-row-cell-description {
+	text-align: left;
 }
 
 .table-row-cell-amount {

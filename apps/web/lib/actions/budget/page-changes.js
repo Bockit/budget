@@ -1,4 +1,5 @@
 import { loadTransactions } from './transactions'
+import range from '../../modules/range'
 
 export function setOverviewPage () {
 	return {
@@ -9,7 +10,7 @@ export function setOverviewPage () {
 }
 
 export function setTransactionsPage () {
-	return (dispatch, getState) => {
+	return (dispatch) => {
 		dispatch({
 			type: 'PAGE:SET',
 			pageType: 'Transactions',
@@ -20,9 +21,7 @@ export function setTransactionsPage () {
 		const limit = 50
 
 		return dispatch(loadTransactions(offset, limit)).then(() => {
-			const transactions = getState().transactions.map((transaction) => {
-				return transaction.get('id')
-			})
+			const transactions = range(offset, limit)
 
 			dispatch({
 				type: 'PAGE:SET',

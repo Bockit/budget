@@ -12,21 +12,19 @@ export function createRecurring (recurring) {
 				amount:${float(amount)}
 				description:${string(description)}
 				tags:${tags}
-			) {}
+			) {id}
 		}
 	`)
 }
 
 export function updateRecurring (id, field, value) {
-	const body = `
+	return request(`
 		mutation UpdateRecurring {
 			updateRecurring(
 				${field}: ${JSON.stringify(value)}
 			) {}
 		}
-	`
-
-	return request(body)
+	`)
 }
 
 export function deleteRecurring (id) {
@@ -69,21 +67,19 @@ export function createTransaction (transaction) {
 				description:${string(description)}
 				audited:${boolean(audited)}
 				tags:${tags}
-			) {}
+			) {id}
 		}
 	`)
 }
 
 export function updateTransaction (id, field, value) {
-	const body = `
+	return request(`
 		mutation UpdateTransaction {
 			updateTransaction(
 				${field}: ${JSON.stringify(value)}
 			) {}
 		}
-	`
-
-	return request(body)
+	`)
 }
 
 export function deleteTransaction (id) {

@@ -36,8 +36,10 @@ class TransactionsPage extends Component {
 	}
 }
 
-function select (state) {
-	return { transactions: state.transactions }
+function select (state, props) {
+	const transactions = props.transactions.map(state.transactions.get)
+
+	return { transactions }
 }
 
 export default connect(select)(TransactionsPage)
